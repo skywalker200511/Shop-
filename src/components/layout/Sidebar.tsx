@@ -40,7 +40,7 @@ export function Sidebar() {
         className={cn(
           'fixed left-0 top-0 h-screen bg-white border-r border-[#e0e0da] z-50 flex flex-col transition-all duration-300 ease-in-out shadow-sm',
           'hidden md:flex',
-          isCollapsed ? 'w-[72px]' : 'w-[260px]',
+          isCollapsed ? 'w-[72px]' : 'w-[280px]',
         )}
       >
         <SidebarContent isCollapsed={isCollapsed} />
@@ -91,14 +91,14 @@ function SidebarContent({
       {/* Logo */}
       <div
         className={cn(
-          'flex items-center border-b border-[#e0e0da] h-16 flex-shrink-0',
-          isCollapsed ? 'justify-center px-3' : 'px-3',
+          'flex items-center border-b border-[#e0e0da] h-24 flex-shrink-0',
+          isCollapsed ? 'justify-center px-3' : 'px-4',
         )}
       >
         {isCollapsed ? (
-          <span className="text-xl font-black text-[#1e3a8a]">S+</span>
+          <span className="text-2xl font-black text-[#1e3a8a]">S+</span>
         ) : (
-          <img src="/logo.png" alt="Shop+ Logo" className="h-14 w-full object-contain object-left" />
+          <img src="/logo.png" alt="Shop+ Logo" className="h-20 w-full object-contain object-left" />
         )}
       </div>
 
