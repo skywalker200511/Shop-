@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta name="description" content="Nexus AI CRM Dashboard - High-stakes enterprise AI environment for analyzing trends, SLA breaches, and resolving complaints."/>
+<title>Nexus AI CRM Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "on-primary-container": "#fffaf9",
+                "primary-fixed-dim": "#ffb3b6",
+                "secondary-fixed": "#dce1ff",
+                "surface-container-lowest": "#090909",
+                "error": "#ffb4ab",
+                "secondary-fixed-dim": "#b6c4ff",
+                "on-primary-fixed-variant": "#920028",
+                "on-error-container": "#ffdad6",
+                "surface-container": "#171717",
+                "surface-bright": "#483435",
+                "outline": "#ac8889",
+                "secondary-container": "#1e3a8a",
+                "background": "#090909",
+                "surface-container-low": "#121212",
+                "on-surface-variant": "#e5bdbe",
+                "on-background": "#fbdbdb",
+                "surface-container-high": "#1f1f1f",
+                "surface-container-highest": "#2a2a2a",
+                "on-secondary-container": "#9db2ff",
+                "primary": "#e11d48",
+                "on-tertiary-fixed": "#002019",
+                "inverse-on-surface": "#3f2b2c",
+                "on-secondary-fixed": "#00164e",
+                "tertiary-fixed-dim": "#74d8bd",
+                "error-container": "#93000a",
+                "tertiary-fixed": "#90f5d9",
+                "on-error": "#690005",
+                "on-surface": "#ffffff",
+                "surface-dim": "#1f0f10",
+                "primary-fixed": "#ffdada",
+                "on-primary-fixed": "#40000c",
+                "surface": "#171717",
+                "surface-variant": "#2a2a2a",
+                "on-tertiary-fixed-variant": "#005142",
+                "outline-variant": "#2a2a2a",
+                "secondary": "#3b82f6",
+                "inverse-primary": "#be0037",
+                "on-secondary": "#ffffff",
+                "tertiary-container": "#00836c",
+                "on-tertiary-container": "#eefff7",
+                "on-tertiary": "#ffffff",
+                "surface-tint": "#e11d48",
+                "on-primary": "#ffffff",
+                "inverse-surface": "#fbdbdb",
+                "primary-container": "#e11d48",
+                "on-secondary-fixed-variant": "#264191",
+                "tertiary": "#74d8bd"
+        },
+        "borderRadius": {
+                "DEFAULT": "10px",
+                "lg": "10px",
+                "xl": "10px",
+                "full": "9999px"
+        },
+        "spacing": {
+                "unit": "4px",
+                "gutter": "20px",
+                "lg": "24px",
+                "sm": "8px",
+                "xl": "48px",
+                "md": "16px",
+                "xs": "4px",
+                "container-max": "1440px"
+        },
+        "fontFamily": {
+                "headline-lg-mobile": ["Inter"],
+                "body-lg": ["Inter"],
+                "label-caps": ["JetBrains Mono"],
+                "body-md": ["Inter"],
+                "headline-md": ["Inter"],
+                "headline-lg": ["Inter"],
+                "display-lg": ["Inter"]
+        },
+        "animation": {
+            "fade-in": "fadeIn 0.8s ease-out forwards",
+            "draw-line": "drawLine 2s ease-out forwards",
+            "pulse-subtle": "pulseSubtle 2s infinite"
+        },
+        "keyframes": {
+            fadeIn: {
+                "0%": { opacity: "0", transform: "translateY(10px)" },
+                "100%": { opacity: "1", transform: "translateY(0)" }
+            },
+            drawLine: {
+                "0%": { strokeDasharray: "1000", strokeDashoffset: "1000" },
+                "100%": { strokeDasharray: "1000", strokeDashoffset: "0" }
+            },
+            pulseSubtle: {
+                "0%, 100%": { opacity: "1", transform: "scale(1)" },
+                "50%": { opacity: "0.7", transform: "scale(1.05)" }
+            }
+        }
+      }
+    }
+  }
+</script>
+<style>
+    body {
+        background-color: #090909;
+        min-height: max(884px, 100dvh);
+    }
+    .grid-overlay {
+        background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                          linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+        background-size: 32px 32px;
+    }
+    .glass-card {
+        background-color: #171717;
+        border: 1px solid #2a2a2a;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+    }
+    .glass-card:hover {
+        border-color: #e11d48;
+        box-shadow: 0 0 15px -5px rgba(225, 29, 72, 0.5);
+        transform: translateY(-2px);
+    }
+    .neon-glow {
+        box-shadow: 0 0 15px rgba(225, 29, 72, 0.3);
+    }
+    .text-gradient {
+        background: linear-gradient(90deg, #E11D48, #3b82f6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .btn-primary {
+        background: #090909;
+        border: 1px solid #E11D48;
+        color: #ffffff;
+        transition: box-shadow 0.3s ease;
+    }
+    .btn-primary:hover {
+        box-shadow: 0 0 15px rgba(225, 29, 72, 0.5);
+    }
+    
+    .hide-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+    .hide-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    #mobile-sidebar {
+        transition: transform 0.3s ease-in-out;
+    }
+    #mobile-sidebar.open {
+        transform: translateX(0);
+    }
+    #sidebar-overlay {
+        transition: opacity 0.3s ease-in-out;
+        opacity: 0;
+        pointer-events: none;
+    }
+    #sidebar-overlay.open {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .page-load-anim {
+        opacity: 0;
+        animation: fadeIn 0.8s ease-out forwards;
+    }
+</style>
+</head>
+<body class="text-on-surface antialiased relative min-h-screen overflow-x-hidden flex page-load-anim">
+<!-- WebGL Shader Background -->
+<div class="fixed inset-0 w-full h-full z-[-2]">
+<canvas id="shader-canvas-ANIMATION_6" style="display:block;width:100%;height:100%"></canvas>
+<script>
+(function() {
+  const canvas = document.getElementById('shader-canvas-ANIMATION_6');
+  function syncSize() {
+    const w = canvas.clientWidth  || 1280;
+    const h = canvas.clientHeight || 720;
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width  = w;
+      canvas.height = h;
+    }
+  }
+  if (typeof ResizeObserver !== 'undefined') {
+    new ResizeObserver(syncSize).observe(canvas);
+  }
+  syncSize();
+  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  if (!gl) return;
+  const vs = `attribute vec2 a_position;
+varying vec2 v_texCoord;
+void main() {
+  v_texCoord = a_position * 0.5 + 0.5;
+  gl_Position = vec4(a_position, 0.0, 1.0);
+}`;
+  const fs = `precision highp float;
+varying vec2 v_texCoord;
+uniform float u_time;
+uniform vec2 u_resolution;
+float grid(vec2 uv, float res) {
+    vec2 grid = fract(uv * res);
+    float line = smoothstep(0.02, 0.0, abs(grid.x - 0.5)) + smoothstep(0.02, 0.0, abs(grid.y - 0.5));
+    return line;
+}
+void main() {
+    vec2 uv = v_texCoord;
+    vec2 centeredUv = (uv - 0.5) * (u_resolution.x / u_resolution.y);
+    vec3 bg = vec3(0.035, 0.035, 0.035);
+    float g1 = grid(uv, 20.0);
+    float g2 = grid(uv, 4.0);
+    vec3 color = bg;
+    color += vec3(0.1) * g1 * 0.2;
+    color += vec3(0.15) * g2 * 0.3;
+    float linePos = fract(uv.y * 2.0 - u_time * 0.1);
+    float scanline = smoothstep(0.005, 0.0, abs(linePos - 0.5)) * 0.05;
+    color += vec3(0.882, 0.114, 0.282) * scanline;
+    float diag = sin((uv.x + uv.y) * 50.0 + u_time * 0.5);
+    color += vec3(0.1) * smoothstep(0.98, 1.0, diag) * 0.1;
+    float pulse = sin(u_time * 0.5) * 0.5 + 0.5;
+    color += vec3(0.118, 0.227, 0.541) * pow(max(0.0, 1.0 - length(centeredUv)), 4.0) * 0.05;
+    gl_FragColor = vec4(color, 1.0);
+}`;
+  function cs(type, src) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    return s;
+  }
+  const prog = gl.createProgram();
+  gl.attachShader(prog, cs(gl.VERTEX_SHADER, vs));
+  gl.attachShader(prog, cs(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(prog);
+  gl.useProgram(prog);
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+  const pos = gl.getAttribLocation(prog, 'a_position');
+  gl.enableVertexAttribArray(pos);
+  gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+  const uTime = gl.getUniformLocation(prog, 'u_time');
+  const uRes = gl.getUniformLocation(prog, 'u_resolution');
+  function render(t) {
+    if (typeof ResizeObserver === 'undefined') syncSize();
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    if (uTime) gl.uniform1f(uTime, t * 0.001);
+    if (uRes) gl.uniform2f(uRes, canvas.width, canvas.height);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    requestAnimationFrame(render);
+  }
+  render(0);
+})();
+</script>
+</div>
+<!-- Background Shader Layer -->
+<div class="fixed inset-0 z-[-1] pointer-events-none opacity-40"></div>
+
+<!-- Mobile Sidebar Overlay -->
+<div id="sidebar-overlay" class="fixed inset-0 bg-black/60 z-40 md:hidden backdrop-blur-sm"></div>
+
+<!-- Sidebar -->
+<aside id="mobile-sidebar" class="fixed md:sticky top-0 left-0 h-screen w-[280px] bg-background border-r border-outline-variant z-50 flex flex-col transform -translate-x-full md:translate-x-0">
+<div class="flex items-center justify-between p-lg border-b border-outline-variant">
+<h1 class="font-display-lg text-headline-lg tracking-tighter text-on-surface">NEXUS AI</h1>
+<button id="close-sidebar" class="md:hidden text-on-surface hover:text-primary transition-colors">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<nav class="flex-1 overflow-y-auto py-md flex flex-col">
+<div class="relative px-md mb-2">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-r-full shadow-[0_0_8px_rgba(225,29,72,0.6)]"></div>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-surface-container text-on-surface border border-outline-variant" href="#">
+<span class="material-symbols-outlined text-primary drop-shadow-[0_0_5px_rgba(225,29,72,0.5)]">dashboard</span>
+<span class="font-body-md font-semibold">Dashboard</span>
+</a>
+</div>
+<div class="px-md flex flex-col gap-sm">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined">report_problem</span>
+<span class="font-body-md">Complaints</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined">forum</span>
+<span class="font-body-md">Inbox</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined">psychology</span>
+<span class="font-body-md">AI Space</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-body-md">Charts</span>
+</a>
+</div>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors mt-auto mx-md mb-md" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body-md">Settings</span>
+</a>
+</nav>
+</aside>
+
+<div class="flex-1 flex flex-col min-h-screen w-full">
+<!-- Top Navigation Bar -->
+<header class="sticky top-0 w-full z-30 flex justify-between items-center px-4 md:px-lg h-16 bg-background/90 backdrop-blur-md border-b border-outline-variant">
+<div class="flex items-center gap-4">
+<button id="open-sidebar" class="md:hidden w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container transition-colors text-on-surface">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="font-display-lg text-display-lg tracking-tighter text-on-surface text-xl md:hidden">NEXUS AI</h1>
+<!-- Global Search (Desktop) -->
+<div class="hidden md:flex items-center bg-surface-container rounded-sm px-4 py-2 w-96 border border-outline-variant focus-within:border-primary transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant mr-2 text-[20px]">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-md text-on-surface w-full placeholder:text-on-surface-variant/50" placeholder="Search across organization..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<button aria-label="AI Search" class="hidden md:flex items-center justify-center gap-2 btn-primary px-4 py-2 rounded-sm transition-all">
+<span class="material-symbols-outlined text-[18px]">auto_awesome</span>
+<span class="font-label-caps">Ask AI</span>
+</button>
+<button aria-label="Search" class="md:hidden w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-[20px]" data-icon="search">search</span>
+</button>
+<button aria-label="Notifications" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container transition-colors relative">
+<span class="material-symbols-outlined text-[20px]" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full shadow-[0_0_5px_rgba(225,29,72,0.8)] animate-ping"></span>
+</button>
+<div class="w-8 h-8 rounded-sm bg-surface-container overflow-hidden border border-outline-variant hover:border-primary transition-colors cursor-pointer ml-2">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="A macro photography shot of a sleek, abstract metallic orb glowing with a subtle internal blue light, set against a completely pitch black background. The surface is highly reflective, showing microscopic imperfections and deep contrast. Corporate modern aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDceutjEnV04axNJDKE_0IaWmWSI67qrs0dhV-AscSTjJ094jXEUM2Ty4x52qGfbtnNpsO19RRYhqHVGUP0qKKkMQXkGisF3_Gzee0BF4wYws8XGUOSvxxu7kgnzfp9pE2lkEnl7dWt1WL5bxNPiH7_bgBuCN-hj_jAPsUfOtXeW4U3g8RT6nRjWxOdBEa4tXK3WXD5OWtStvutrzfWGBgKzXKT8uLSXqu6sXxb3BxsIpwGvBuzy-eOiQ"/>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 p-md md:p-lg flex flex-col gap-lg relative z-10 w-full max-w-container-max mx-auto">
+<!-- Metrics Grid -->
+<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-md" style="animation-delay: 0.1s;">
+<!-- Hero Metric (Total Complaints) -->
+<div class="glass-card rounded-xl p-lg flex flex-col justify-center relative">
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-unit tracking-widest uppercase">Total Complaints</p>
+<h2 class="font-display-lg text-display-lg text-on-surface text-5xl mb-3 flex items-baseline gap-1">
+<span class="tabular-nums font-bold" id="counter">1,492</span>
+</h2>
+<div class="inline-flex items-center gap-2 bg-surface-container-highest border border-outline-variant px-3 py-1.5 rounded-sm w-fit border-l-2 border-l-primary">
+<span class="material-symbols-outlined text-primary text-[16px] animate-pulse-subtle" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<span class="font-label-caps text-label-caps text-on-surface">AI Insight: Trending Down 12%</span>
+</div>
+</div>
+<!-- Metric Card 1 -->
+<div class="glass-card rounded-xl p-md flex flex-col justify-between min-h-[140px] border-l-2 border-l-primary">
+<div class="flex justify-between items-start">
+<span class="font-label-caps text-label-caps text-on-surface-variant">SLA Breaches</span>
+<span class="material-symbols-outlined text-primary text-[20px]">warning</span>
+</div>
+<div>
+<p class="font-headline-lg text-headline-lg text-on-surface">24</p>
+<p class="font-body-md text-body-md text-primary flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[16px]">arrow_upward</span> 4% this week
+</p>
+</div>
+</div>
+<!-- Metric Card 2 -->
+<div class="glass-card rounded-xl p-md flex flex-col justify-between min-h-[140px] border-l-2 border-l-secondary">
+<div class="flex justify-between items-start">
+<span class="font-label-caps text-label-caps text-on-surface-variant">AI Accuracy</span>
+<span class="material-symbols-outlined text-secondary text-[20px]">psychology</span>
+</div>
+<div>
+<p class="font-headline-lg text-headline-lg text-on-surface">98.4<span class="text-on-surface-variant text-xl">%</span></p>
+<p class="font-body-md text-body-md text-tertiary flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[16px]">check_circle</span> Optimal
+</p>
+</div>
+</div>
+<!-- Metric Card 3 -->
+<div class="glass-card rounded-xl p-md flex flex-col justify-between min-h-[140px] border-l-2 border-l-on-surface-variant">
+<div class="flex justify-between items-start">
+<span class="font-label-caps text-label-caps text-on-surface-variant">Avg Resolution</span>
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]">timer</span>
+</div>
+<div>
+<p class="font-headline-lg text-headline-lg text-on-surface">4.2<span class="text-on-surface-variant text-xl">h</span></p>
+<p class="font-body-md text-body-md text-tertiary flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[16px]">arrow_downward</span> 1.1h
+</p>
+</div>
+</div>
+</section>
+<!-- Main Middle Section (Chart & AI Prediction) -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-md" style="animation-delay: 0.2s;">
+<!-- Complaint Trends Chart -->
+<div class="glass-card rounded-xl p-lg flex flex-col gap-sm lg:col-span-2">
+<div class="flex justify-between items-center mb-4">
+<h3 class="font-headline-md text-headline-md text-on-surface">Weekly Volume</h3>
+<div class="flex items-center gap-2">
+<button class="px-3 py-1 bg-surface-container-highest rounded-sm font-label-caps text-on-surface border border-outline-variant">Weekly</button>
+<button class="px-3 py-1 rounded-sm font-label-caps text-on-surface-variant hover:bg-surface-container border border-transparent hover:border-outline-variant transition-colors">Monthly</button>
+<span class="material-symbols-outlined text-on-surface-variant text-[20px] ml-2 cursor-pointer hover:text-on-surface transition-colors">more_horiz</span>
+</div>
+</div>
+<div class="h-64 w-full relative">
+<!-- Simulated Chart Grid -->
+<div class="absolute inset-0 flex flex-col justify-between border-l border-b border-outline-variant pb-6 pl-6">
+<div class="w-full border-t border-outline-variant border-dashed h-0 opacity-50"></div>
+<div class="w-full border-t border-outline-variant border-dashed h-0 opacity-50"></div>
+<div class="w-full border-t border-outline-variant border-dashed h-0 opacity-50"></div>
+<div class="w-full border-t border-outline-variant border-dashed h-0 opacity-50"></div>
+<div class="w-full border-t border-outline-variant border-dashed h-0 opacity-50"></div>
+</div>
+<!-- SVG Line -->
+<svg class="absolute inset-0 w-full h-full pb-6 pl-6 overflow-visible" preserveaspectratio="none" viewbox="0 0 100 100">
+<defs>
+<lineargradient id="chartGrad" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#E11D48" stop-opacity="0.3"></stop>
+<stop offset="100%" stop-color="#E11D48" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<path d="M0,85 C15,85 20,55 35,60 C50,65 60,35 75,45 C85,50 95,20 100,20 L100,100 L0,100 Z" fill="url(#chartGrad)"></path>
+<path class="drop-shadow-[0_0_8px_rgba(225,29,72,0.6)] animate-draw-line" d="M0,85 C15,85 20,55 35,60 C50,65 60,35 75,45 C85,50 95,20 100,20" fill="none" stroke="#E11D48" stroke-width="2.5" stroke-linecap="round"></path>
+<!-- Data Points -->
+<circle cx="35" cy="60" fill="#090909" r="3" stroke="#E11D48" stroke-width="2"></circle>
+<circle cx="75" cy="45" fill="#090909" r="3" stroke="#E11D48" stroke-width="2"></circle>
+<circle class="drop-shadow-[0_0_10px_rgba(225,29,72,1)]" cx="100" cy="20" fill="#E11D48" r="4" stroke="#090909" stroke-width="1.5"></circle>
+</svg>
+<!-- Y Axis Labels -->
+<div class="absolute top-0 left-0 bottom-6 flex flex-col justify-between font-label-caps text-label-caps text-on-surface text-[10px] items-end pr-2">
+<span>400</span>
+<span>300</span>
+<span>200</span>
+<span>100</span>
+<span>0</span>
+</div>
+<!-- X Axis Labels -->
+<div class="absolute bottom-0 left-6 right-0 flex justify-between font-label-caps text-label-caps text-on-surface text-[11px] pt-2">
+<span>Mon</span>
+<span>Tue</span>
+<span>Wed</span>
+<span>Thu</span>
+<span>Fri</span>
+<span>Sat</span>
+<span>Sun</span>
+</div>
+</div>
+</div>
+<!-- AI Intelligence Hub -->
+<div class="glass-card rounded-xl p-lg relative flex flex-col gap-md border-l-2 border-l-secondary lg:col-span-1 bg-[linear-gradient(135deg,rgba(59,130,246,0.05)_0%,transparent_100%)]">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-secondary text-[24px]">radar</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">AI Priority Prediction</h3>
+</div>
+<div class="flex flex-col gap-4 flex-1 relative">
+<div class="absolute left-5 top-2 bottom-2 w-px bg-outline-variant z-0"></div>
+<!-- Feed Item -->
+<div class="flex gap-4 items-start relative z-10 pb-4">
+<div class="w-10 h-10 rounded-sm bg-surface-container border border-outline-variant flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-primary text-[20px] animate-pulse-subtle">priority_high</span>
+</div>
+<div class="flex-1 bg-surface-container-highest p-3 rounded-sm border border-outline-variant">
+<p class="font-body-md text-body-md text-on-surface text-sm">Surge in billing complaints predicted in NA region.</p>
+<div class="flex items-center gap-3 mt-2">
+<span class="font-label-caps text-label-caps bg-surface px-2 py-1 rounded-sm text-[11px] text-primary border border-primary/30">94% Confidence</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant text-[11px]">Just now</span>
+</div>
+</div>
+</div>
+<!-- Feed Item -->
+<div class="flex gap-4 items-start relative z-10 pb-4">
+<div class="w-10 h-10 rounded-sm bg-surface-container border border-outline-variant flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-secondary text-[20px] animate-pulse-subtle" style="animation-delay: 0.5s;">insights</span>
+</div>
+<div class="flex-1 bg-surface-container-highest p-3 rounded-sm border border-outline-variant">
+<p class="font-body-md text-body-md text-on-surface text-sm">Resolution times improving for tier 1 support issues.</p>
+<div class="flex items-center gap-3 mt-2">
+<span class="font-label-caps text-label-caps bg-surface px-2 py-1 rounded-sm text-[11px] text-secondary border border-secondary/30">88% Confidence</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant text-[11px]">12m ago</span>
+</div>
+</div>
+</div>
+<!-- Feed Item -->
+<div class="flex gap-4 items-start relative z-10">
+<div class="w-10 h-10 rounded-sm bg-surface-container border border-outline-variant flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-tertiary text-[20px] animate-pulse-subtle" style="animation-delay: 1s;">trending_up</span>
+</div>
+<div class="flex-1 bg-surface-container-highest p-3 rounded-sm border border-outline-variant">
+<p class="font-body-md text-body-md text-on-surface text-sm">Customer satisfaction scores up 2% this week.</p>
+<div class="flex items-center gap-3 mt-2">
+<span class="font-label-caps text-label-caps bg-surface px-2 py-1 rounded-sm text-[11px] text-tertiary border border-tertiary/30">75% Confidence</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant text-[11px]">1h ago</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- High Priority Alerts -->
+<section class="flex flex-col gap-md" style="animation-delay: 0.3s;">
+<div class="flex justify-between items-center mb-2">
+<h3 class="font-headline-md text-headline-md text-on-surface">High Priority Alerts</h3>
+<a class="text-primary font-label-caps hover:underline" href="#">View All</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-md">
+<!-- Alert Item 1 -->
+<div class="glass-card rounded-xl p-4 flex gap-4 items-center border-l-2 border-l-primary">
+<div class="w-12 h-12 rounded-sm bg-surface-container-highest border border-outline-variant overflow-hidden flex-shrink-0">
+<img alt="Customer Avatar" class="w-full h-full object-cover grayscale" data-alt="Close up of a stylized, monochrome abstract 3D icon representing a frustrated face or alert symbol, floating in a dark void. Highly detailed, rim lighting, sleek corporate look." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkh3ppB95khgIquAI_hOvPo9NGrvh1_-O2Hm_lngwFxsQi80sJrv98nolZROg9wU_pdPqDBvuFyrLAXrTCJr4inRsu51821NNuzcU9HJNYp0Mc28wPCDoE6I1NqDE4MucB5NrIfp68a4u_2n981LBtDSMhenR8YQ5OpKL-oMfM8GE54B-AKgahDUAzbam5pyHTkizshiPqVbcBRd2fMAzqd4lMNLTzJTm_M8rxdF0zIBq7Rx7mgyEi_A"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-center mb-1">
+<p class="font-label-caps text-label-caps text-on-surface truncate font-semibold">Enterprise Account Outage</p>
+<span class="font-label-caps text-label-caps text-primary text-[10px] border border-primary/50 px-2 py-0.5 rounded-sm">URGENT</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-primary">mood_bad</span>
+<span class="font-body-md text-body-md text-on-surface-variant text-sm truncate">AI Sentiment: Very Angry</span>
+</div>
+</div>
+</div>
+<!-- Alert Item 2 -->
+<div class="glass-card rounded-xl p-4 flex gap-4 items-center border-l-2 border-l-primary">
+<div class="w-12 h-12 rounded-sm bg-surface-container-highest border border-outline-variant overflow-hidden flex-shrink-0">
+<img alt="System Avatar" class="w-full h-full object-cover grayscale" data-alt="Close up of a stylized, monochrome abstract 3D icon representing a server stack with a red glowing warning light, floating in a dark void. Highly detailed, rim lighting, sleek corporate look." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBi4-pUXMuXHtiYarMzTYy0S_joJzulKsRloKc4HQpgty5OST00jyi8a52S25Vbk466DzWV8EWDoYy-dO-ldz_v59IlNwmWwoI-LuOqeWQMq2AquX-Y_zG35ncmEuQFxcsK_9rUkk_pFkeKPlQ29jdl6pMgWvjB73kKPz4h4ZWmeu56kJFhYKZeQd3i0c47NnUqR6ByN-p-sw0R7_Dsx38vrRyzp6mT5yYM-V0Ys1aR80veUKV0U5Ml2Q"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-center mb-1">
+<p class="font-label-caps text-label-caps text-on-surface truncate font-semibold">API Rate Limit Exceeded</p>
+<span class="font-label-caps text-label-caps text-primary text-[10px] border border-primary/50 px-2 py-0.5 rounded-sm">URGENT</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-primary">mood_bad</span>
+<span class="font-body-md text-body-md text-on-surface-variant text-sm truncate">AI Sentiment: Frustrated</span>
+</div>
+</div>
+</div>
+<!-- Alert Item 3 (Desktop only to fill row) -->
+<div class="glass-card rounded-xl p-4 flex gap-4 items-center border-l-2 border-l-primary hidden lg:flex">
+<div class="w-12 h-12 rounded-sm bg-surface-container-highest border border-outline-variant overflow-hidden flex-shrink-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-[24px]">security</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-center mb-1">
+<p class="font-label-caps text-label-caps text-on-surface truncate font-semibold">Failed Login Spike</p>
+<span class="font-label-caps text-label-caps text-primary text-[10px] border border-primary/50 px-2 py-0.5 rounded-sm">URGENT</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-primary">warning</span>
+<span class="font-body-md text-body-md text-on-surface-variant text-sm truncate">Security: Possible brute force</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+</div>
+<!-- Floating AI Assistant Button (Contextual for Dashboard) -->
+<button aria-label="AI Assistant" class="fixed bottom-24 right-4 md:bottom-8 md:right-8 z-40 w-14 h-14 md:w-16 md:h-16 rounded-sm btn-primary flex items-center justify-center hover:scale-105 active:scale-95 transition-all md:hidden shadow-[0_0_15px_rgba(225,29,72,0.5)]">
+<span class="material-symbols-outlined text-white text-[28px] md:text-[32px] animate-pulse-subtle" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+</button>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-30 flex justify-around items-center px-2 py-3 bg-surface-container/90 backdrop-blur-md border-t border-outline-variant md:hidden">
+<!-- Dash (Active) -->
+<a class="flex flex-col items-center justify-center text-primary bg-surface-container-highest border border-outline-variant rounded-sm px-3 py-1 scale-110 transition-all duration-300" href="#">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-label-caps text-label-caps text-[10px] mt-1">Dash</span>
+</a>
+<!-- Inbox (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-on-surface transition-all duration-300 group" href="#">
+<span class="material-symbols-outlined text-[24px] group-hover:scale-110 transition-transform">forum</span>
+<span class="font-label-caps text-label-caps text-[10px] mt-1">Inbox</span>
+</a>
+<!-- AI Space (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-on-surface transition-all duration-300 group" href="#">
+<span class="material-symbols-outlined text-[24px] group-hover:scale-110 transition-transform">psychology</span>
+<span class="font-label-caps text-label-caps text-[10px] mt-1">AI Space</span>
+</a>
+<!-- Charts (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-on-surface transition-all duration-300 group" href="#">
+<span class="material-symbols-outlined text-[24px] group-hover:scale-110 transition-transform">analytics</span>
+<span class="font-label-caps text-label-caps text-[10px] mt-1">Charts</span>
+</a>
+<!-- Settings (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-on-surface transition-all duration-300 group" href="#">
+<span class="material-symbols-outlined text-[24px] group-hover:scale-110 transition-transform">settings</span>
+<span class="font-label-caps text-label-caps text-[10px] mt-1">Settings</span>
+</a>
+</nav>
+
+<script>
+    // Counter animation
+    document.addEventListener('DOMContentLoaded', () => {
+        const counterElement = document.getElementById('counter');
+        if(counterElement) {
+            let start = 0;
+            const end = 1492;
+            const duration = 2000;
+            let startTime = null;
+
+            const animate = (currentTime) => {
+                if (!startTime) startTime = currentTime;
+                const progress = currentTime - startTime;
+                const increment = Math.min(progress / duration, 1);
+                // Ease out quad
+                const easeOutQuad = increment * (2 - increment);
+
+                counterElement.innerText = Math.floor(easeOutQuad * end).toLocaleString();
+                
+                if(progress < duration) {
+                    requestAnimationFrame(animate);
+                } else {
+                    counterElement.innerText = end.toLocaleString();
+                }
+            };
+            requestAnimationFrame(animate);
+        }
+
+        // Sidebar Toggle Logic
+        const sidebar = document.getElementById('mobile-sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        const openBtn = document.getElementById('open-sidebar');
+        const closeBtn = document.getElementById('close-sidebar');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('open');
+            document.body.classList.toggle('overflow-hidden');
+        }
+
+        if (openBtn) openBtn.addEventListener('click', toggleSidebar);
+        if (closeBtn) closeBtn.addEventListener('click', toggleSidebar);
+        if (overlay) overlay.addEventListener('click', toggleSidebar);
+    });
+</script>
+</body>
+</html>
