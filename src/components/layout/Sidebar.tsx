@@ -10,7 +10,6 @@ import {
 } from 'lucide-react';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { cn } from '@/lib/utils';
-import { ShopPlusLogo } from '@/components/shared/ShopPlusLogo';
 
 const staffNavItems = [
   { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
@@ -93,13 +92,17 @@ function SidebarContent({
       <div
         className={cn(
           'flex items-center border-b border-[#e0e0da] h-16 flex-shrink-0',
-          isCollapsed ? 'justify-center px-3' : 'px-4',
+          isCollapsed ? 'justify-center px-3' : 'px-2',
         )}
       >
         {isCollapsed ? (
           <span className="text-2xl font-black text-[#1e3a8a]">S+</span>
         ) : (
-          <ShopPlusLogo className="w-full h-10" />
+          <img
+            src="/logo.png"
+            alt="Shop+ Logo"
+            className="w-full h-full object-contain object-left py-1"
+          />
         )}
       </div>
 

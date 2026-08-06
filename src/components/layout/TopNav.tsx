@@ -4,7 +4,6 @@ import { useState, useRef, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSidebar } from '@/contexts/SidebarContext';
 import { cn } from '@/lib/utils';
-import { ShopPlusLogo } from '@/components/shared/ShopPlusLogo';
 
 export function TopNav() {
   const { user, logout } = useAuth();
@@ -48,7 +47,7 @@ export function TopNav() {
 
         {/* Mobile logo */}
         <div className="md:hidden">
-          <ShopPlusLogo className="h-8 w-auto" />
+          <img src="/logo.png" alt="Shop+" className="h-9 w-auto object-contain" />
         </div>
 
         {/* Desktop search */}
