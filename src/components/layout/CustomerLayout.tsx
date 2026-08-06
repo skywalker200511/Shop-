@@ -3,6 +3,7 @@ import { FileWarning, PlusCircle, LogOut, User, LayoutDashboard } from 'lucide-r
 import { useState, useRef, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
+import { ShopPlusLogo } from '@/components/shared/ShopPlusLogo';
 
 export function CustomerLayout() {
   const { user, logout } = useAuth();
@@ -36,7 +37,7 @@ export function CustomerLayout() {
       {/* Customer Top Nav */}
       <header className="sticky top-0 w-full z-30 flex justify-between items-center px-4 md:px-8 h-16 bg-white/80 backdrop-blur-md border-b border-[#e0e0da]">
         <div className="flex items-center gap-6">
-          <img src="/logo.png" alt="Shop+" className="h-10 object-contain" />
+          <ShopPlusLogo className="h-9 w-auto" />
 
           <nav className="hidden md:flex items-center gap-1">
             <NavLink
