@@ -36,9 +36,7 @@ export function CustomerLayout() {
       {/* Customer Top Nav */}
       <header className="sticky top-0 w-full z-30 flex justify-between items-center px-4 md:px-8 h-16 bg-white/80 backdrop-blur-md border-b border-[#e0e0da]">
         <div className="flex items-center gap-6">
-          <h1 className="font-black text-lg tracking-[-0.04em]">
-            <span className="text-[#0a0a0a]">NEXUS</span> <span className="text-[#e11d48]">AI</span>
-          </h1>
+          <img src="/logo.png" alt="Shop+" className="h-10 object-contain" />
 
           <nav className="hidden md:flex items-center gap-1">
             <NavLink

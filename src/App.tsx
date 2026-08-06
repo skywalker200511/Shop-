@@ -7,6 +7,7 @@ import { StaffLayout } from '@/components/layout/StaffLayout';
 import { CustomerLayout } from '@/components/layout/CustomerLayout';
 import { CustomCursor } from '@/components/shared/CustomCursor';
 import { MouseGradient } from '@/components/shared/MouseGradient';
+import { PS4Background } from '@/components/shared/PS4Background';
 
 // Lazy-loaded pages
 const LoginPage = lazy(() => import('@/pages/auth/LoginPage'));
@@ -185,7 +186,7 @@ export default function App() {
       <AuthProvider>
         <CustomCursor />
         <MouseGradient />
-        <div className="bg-orbs" />
+        <PS4Background />
         <div className="noise-overlay" />
         <AppRoutes />
         <Toaster

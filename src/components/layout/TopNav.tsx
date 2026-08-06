@@ -46,9 +46,9 @@ export function TopNav() {
         </button>
 
         {/* Mobile logo */}
-        <h1 className="font-black text-lg tracking-[-0.04em] text-[#0a0a0a] md:hidden">
-          NEXUS <span className="text-[#e11d48]">AI</span>
-        </h1>
+        <div className="md:hidden">
+          <img src="/logo.png" alt="Shop+" className="h-8 object-contain" />
+        </div>
 
         {/* Desktop search */}
         <div className="hidden md:flex items-center bg-[#f5f5f0] rounded-xl px-4 py-2 w-80 lg:w-96 border border-[#e0e0da] focus-within:border-[#e11d48] focus-within:bg-white focus-within:shadow-sm transition-all">

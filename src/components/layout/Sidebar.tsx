@@ -92,22 +92,14 @@ function SidebarContent({
       <div
         className={cn(
           'flex items-center border-b border-[#e0e0da] h-16 flex-shrink-0',
-          isCollapsed ? 'justify-center px-2' : 'px-6',
+          isCollapsed ? 'justify-center px-2' : 'px-4',
         )}
       >
-        <h1
-          className={cn(
-            'font-black tracking-[-0.04em] transition-all',
-            isCollapsed ? 'text-sm text-[#e11d48]' : 'text-xl',
-          )}
-        >
-          {isCollapsed ? 'N' : (
-            <span>
-              <span className="text-[#0a0a0a]">NEXUS</span>{' '}
-              <span className="text-[#e11d48]">AI</span>
-            </span>
-          )}
-        </h1>
+        {isCollapsed ? (
+          <span className="text-xl font-black text-[#1e3a8a]">S+</span>
+        ) : (
+          <img src="/logo.png" alt="Shop+ Logo" className="h-10 object-contain" />
+        )}
       </div>
 
       {/* Navigation */}
