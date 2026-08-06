@@ -92,13 +92,13 @@ function SidebarContent({
       <div
         className={cn(
           'flex items-center border-b border-[#e0e0da] h-16 flex-shrink-0',
-          isCollapsed ? 'justify-center px-2' : 'px-4',
+          isCollapsed ? 'justify-center px-3' : 'px-3',
         )}
       >
         {isCollapsed ? (
           <span className="text-xl font-black text-[#1e3a8a]">S+</span>
         ) : (
-          <img src="/logo.png" alt="Shop+ Logo" className="h-10 object-contain" />
+          <img src="/logo.png" alt="Shop+ Logo" className="h-14 w-full object-contain object-left" />
         )}
       </div>
 

@@ -20,8 +20,8 @@ export function CustomCursor() {
     const animateRing = () => {
       const dx = mousePos.current.x - ringPos.current.x;
       const dy = mousePos.current.y - ringPos.current.y;
-      ringPos.current.x += dx * 0.28;
-      ringPos.current.y += dy * 0.28;
+      ringPos.current.x += dx * 0.55;
+      ringPos.current.y += dy * 0.55;
       if (ringRef.current) {
         ringRef.current.style.left = `${ringPos.current.x}px`;
         ringRef.current.style.top = `${ringPos.current.y}px`;
@@ -34,19 +34,19 @@ export function CustomCursor() {
       const isClickable = t.tagName === 'BUTTON' || t.tagName === 'A' || t.closest('button') || t.closest('a') || t.tagName === 'SELECT' || t.tagName === 'INPUT';
       if (dotRef.current && ringRef.current) {
         if (isClickable) {
-          dotRef.current.style.width = '8px';
-          dotRef.current.style.height = '8px';
-          dotRef.current.style.background = '#E11D48';
-          ringRef.current.style.width = '52px';
-          ringRef.current.style.height = '52px';
-          ringRef.current.style.borderColor = 'rgba(225, 29, 72, 0.6)';
-          ringRef.current.style.background = 'rgba(225, 29, 72, 0.08)';
-        } else {
-          dotRef.current.style.width = '12px';
-          dotRef.current.style.height = '12px';
+          dotRef.current.style.width = '6px';
+          dotRef.current.style.height = '6px';
           dotRef.current.style.background = '#E11D48';
           ringRef.current.style.width = '36px';
           ringRef.current.style.height = '36px';
+          ringRef.current.style.borderColor = 'rgba(225, 29, 72, 0.6)';
+          ringRef.current.style.background = 'rgba(225, 29, 72, 0.08)';
+        } else {
+          dotRef.current.style.width = '6px';
+          dotRef.current.style.height = '6px';
+          dotRef.current.style.background = '#E11D48';
+          ringRef.current.style.width = '24px';
+          ringRef.current.style.height = '24px';
           ringRef.current.style.borderColor = 'rgba(225, 29, 72, 0.5)';
           ringRef.current.style.background = 'transparent';
         }
