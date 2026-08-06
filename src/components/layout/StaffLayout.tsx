@@ -8,7 +8,7 @@ export function StaffLayout() {
   const { isCollapsed } = useSidebar();
 
   return (
-    <div className="min-h-screen bg-[#090909] flex">
+    <div className="min-h-screen bg-[#f5f5f0] flex">
       <Sidebar />
       <div
         className={cn(

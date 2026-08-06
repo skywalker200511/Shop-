@@ -32,12 +32,12 @@ export function CustomerLayout() {
     .toUpperCase() || 'U';
 
   return (
-    <div className="min-h-screen bg-[#090909] flex flex-col">
+    <div className="min-h-screen bg-[#f5f5f0] flex flex-col">
       {/* Customer Top Nav */}
-      <header className="sticky top-0 w-full z-30 flex justify-between items-center px-4 md:px-8 h-16 bg-[#090909]/90 backdrop-blur-md border-b border-[#2a2a2a]">
+      <header className="sticky top-0 w-full z-30 flex justify-between items-center px-4 md:px-8 h-16 bg-white/80 backdrop-blur-md border-b border-[#e0e0da]">
         <div className="flex items-center gap-6">
-          <h1 className="font-bold text-lg tracking-[-0.04em] text-white">
-            NEXUS AI
+          <h1 className="font-black text-lg tracking-[-0.04em]">
+            <span className="text-[#0a0a0a]">NEXUS</span> <span className="text-[#e11d48]">AI</span>
           </h1>
 
           <nav className="hidden md:flex items-center gap-1">
@@ -45,10 +45,10 @@ export function CustomerLayout() {
               to="/customer/dashboard"
               className={({ isActive }) =>
                 cn(
-                  'flex items-center gap-2 px-4 py-2 rounded-[10px] text-sm transition-all',
+                  'flex items-center gap-2 px-4 py-2 rounded-xl text-sm transition-all',
                   isActive
-                    ? 'bg-[#171717] text-white border border-[#2a2a2a]'
-                    : 'text-[#e5bdbe] hover:bg-[#171717] hover:text-white border border-transparent',
+                    ? 'bg-[#fff0f3] text-[#e11d48] border border-[#fecdd3] font-medium'
+                    : 'text-[#555550] hover:bg-[#f5f5f0] hover:text-[#0a0a0a] border border-transparent',
                 )
               }
             >
@@ -59,10 +59,10 @@ export function CustomerLayout() {
               to="/customer/submit"
               className={({ isActive }) =>
                 cn(
-                  'flex items-center gap-2 px-4 py-2 rounded-[10px] text-sm transition-all',
+                  'flex items-center gap-2 px-4 py-2 rounded-xl text-sm transition-all',
                   isActive
-                    ? 'bg-[#171717] text-white border border-[#2a2a2a]'
-                    : 'text-[#e5bdbe] hover:bg-[#171717] hover:text-white border border-transparent',
+                    ? 'bg-[#fff0f3] text-[#e11d48] border border-[#fecdd3] font-medium'
+                    : 'text-[#555550] hover:bg-[#f5f5f0] hover:text-[#0a0a0a] border border-transparent',
                 )
               }
             >
@@ -73,31 +73,30 @@ export function CustomerLayout() {
         </div>
 
         <div className="flex items-center gap-3">
-          {/* User dropdown */}
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setShowDropdown(!showDropdown)}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-[10px] hover:bg-[#171717] transition-colors"
+              className="flex items-center gap-2 px-3 py-1.5 rounded-xl hover:bg-[#f5f5f0] transition-colors"
             >
-              <div className="w-8 h-8 rounded-[10px] bg-[#171717] border border-[#2a2a2a] flex items-center justify-center">
-                <span className="text-xs font-semibold text-white font-['JetBrains_Mono']">
+              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#e11d48] to-[#c81040] border border-red-200 flex items-center justify-center">
+                <span className="text-xs font-bold text-white font-['JetBrains_Mono']">
                   {initials}
                 </span>
               </div>
-              <span className="hidden md:block text-sm text-white">{user?.full_name}</span>
+              <span className="hidden md:block text-sm text-[#0a0a0a] font-medium">{user?.full_name}</span>
             </button>
 
             {showDropdown && (
-              <div className="absolute right-0 top-12 w-56 bg-[#171717] border border-[#2a2a2a] rounded-[10px] shadow-xl overflow-hidden z-50">
-                <div className="px-4 py-3 border-b border-[#2a2a2a]">
-                  <p className="text-sm font-semibold text-white">{user?.full_name}</p>
-                  <p className="text-xs text-[#e5bdbe] mt-0.5">{user?.email}</p>
-                  <p className="text-xs text-[#707070] mt-0.5">{user?.company}</p>
+              <div className="absolute right-0 top-12 w-56 bg-white border border-[#e0e0da] rounded-2xl shadow-xl shadow-black/5 overflow-hidden z-50">
+                <div className="px-4 py-3 border-b border-[#e0e0da] bg-[#fafaf7]">
+                  <p className="text-sm font-semibold text-[#0a0a0a]">{user?.full_name}</p>
+                  <p className="text-xs text-[#737370] mt-0.5">{user?.email}</p>
+                  {user?.company && <p className="text-xs text-[#a0a09a] mt-0.5">{user?.company}</p>}
                 </div>
                 <div className="py-1">
                   <button
                     onClick={handleLogout}
-                    className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-[#e11d48] hover:bg-[#2a2a2a] transition-colors"
+                    className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-[#e11d48] hover:bg-[#fff0f3] transition-colors"
                   >
                     <LogOut className="w-4 h-4" />
                     Logout
@@ -110,15 +109,13 @@ export function CustomerLayout() {
       </header>
 
       {/* Mobile bottom nav */}
-      <nav className="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 py-3 bg-[#171717]/90 backdrop-blur-md border-t border-[#2a2a2a] md:hidden">
+      <nav className="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 py-3 bg-white/90 backdrop-blur-md border-t border-[#e0e0da] md:hidden shadow-lg">
         <NavLink
           to="/customer/dashboard"
           className={({ isActive }) =>
             cn(
-              'flex flex-col items-center justify-center gap-1 px-4 py-1 rounded-[10px] transition-all',
-              isActive
-                ? 'text-[#e11d48] bg-[#2a2a2a] scale-110'
-                : 'text-[#e5bdbe] hover:text-white',
+              'flex flex-col items-center justify-center gap-1 px-4 py-1 rounded-xl transition-all',
+              isActive ? 'text-[#e11d48] bg-[#fff0f3] scale-110' : 'text-[#737370] hover:text-[#0a0a0a]',
             )
           }
         >
@@ -129,10 +126,8 @@ export function CustomerLayout() {
           to="/customer/submit"
           className={({ isActive }) =>
             cn(
-              'flex flex-col items-center justify-center gap-1 px-4 py-1 rounded-[10px] transition-all',
-              isActive
-                ? 'text-[#e11d48] bg-[#2a2a2a] scale-110'
-                : 'text-[#e5bdbe] hover:text-white',
+              'flex flex-col items-center justify-center gap-1 px-4 py-1 rounded-xl transition-all',
+              isActive ? 'text-[#e11d48] bg-[#fff0f3] scale-110' : 'text-[#737370] hover:text-[#0a0a0a]',
             )
           }
         >
@@ -141,7 +136,7 @@ export function CustomerLayout() {
         </NavLink>
         <button
           onClick={handleLogout}
-          className="flex flex-col items-center justify-center gap-1 px-4 py-1 text-[#e5bdbe] hover:text-white transition-all"
+          className="flex flex-col items-center justify-center gap-1 px-4 py-1 text-[#737370] hover:text-[#0a0a0a] transition-all"
         >
           <User className="w-5 h-5" />
           <span className="text-[10px] font-['JetBrains_Mono'] tracking-[0.05em]">Profile</span>

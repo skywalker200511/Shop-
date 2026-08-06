@@ -5,6 +5,8 @@ import { AuthProvider, useAuth } from '@/contexts/AuthContext';
 import { SidebarProvider } from '@/contexts/SidebarContext';
 import { StaffLayout } from '@/components/layout/StaffLayout';
 import { CustomerLayout } from '@/components/layout/CustomerLayout';
+import { CustomCursor } from '@/components/shared/CustomCursor';
+import { MouseGradient } from '@/components/shared/MouseGradient';
 
 // Lazy-loaded pages
 const LoginPage = lazy(() => import('@/pages/auth/LoginPage'));
@@ -17,10 +19,10 @@ const SubmitComplaintPage = lazy(() => import('@/pages/customer/SubmitComplaintP
 
 function LoadingFallback() {
   return (
-    <div className="min-h-screen bg-[#090909] flex items-center justify-center">
+    <div className="min-h-screen bg-[#f5f5f0] flex items-center justify-center">
       <div className="flex flex-col items-center gap-4">
         <div className="w-8 h-8 border-2 border-[#e11d48] border-t-transparent rounded-full animate-spin" />
-        <p className="text-sm text-[#e5bdbe] font-['JetBrains_Mono'] tracking-[0.05em]">
+        <p className="text-sm text-[#737370] font-['JetBrains_Mono'] tracking-[0.05em]">
           Loading...
         </p>
       </div>
@@ -159,13 +161,13 @@ function AppRoutes() {
       <Route
         path="*"
         element={
-          <div className="min-h-screen bg-[#090909] flex items-center justify-center">
+          <div className="min-h-screen bg-[#f5f5f0] flex items-center justify-center">
             <div className="text-center">
               <h1 className="text-6xl font-bold text-[#e11d48] mb-4">404</h1>
-              <p className="text-[#e5bdbe] mb-6">Page not found</p>
+              <p className="text-[#737370] mb-6">Page not found</p>
               <a
                 href="/login"
-                className="px-6 py-2 bg-[#e11d48] text-white rounded-[10px] hover:shadow-[0_0_15px_rgba(225,29,72,0.4)] transition-all"
+                className="px-6 py-2 bg-[#e11d48] text-white rounded-2xl hover:shadow-lg transition-all"
               >
                 Go Home
               </a>
@@ -181,18 +183,23 @@ export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
+        <CustomCursor />
+        <MouseGradient />
+        <div className="bg-orbs" />
+        <div className="noise-overlay" />
         <AppRoutes />
         <Toaster
           position="top-right"
           toastOptions={{
             style: {
-              background: '#171717',
-              border: '1px solid #2a2a2a',
-              color: '#ffffff',
+              background: '#ffffff',
+              border: '1px solid #e0e0da',
+              color: '#0a0a0a',
               fontFamily: 'Inter, sans-serif',
+              boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
             },
           }}
-          theme="dark"
+          theme="light"
         />
       </AuthProvider>
     </BrowserRouter>
