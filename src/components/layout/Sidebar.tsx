@@ -101,7 +101,7 @@ function SidebarContent({
           <img
             src="/logo.png"
             alt="Shop+ Logo"
-            className="w-full h-full object-contain object-left py-1"
+            className="w-full h-full object-contain object-center py-1"
           />
         )}
       </div>
