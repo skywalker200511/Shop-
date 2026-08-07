@@ -36,8 +36,8 @@ export default function AIAnalysisPage() {
       const summary = await analyzeAllComplaints(complaints);
       setBatchResults(summary);
       toast.success('Batch analysis complete');
-    } catch (error) {
-      toast.error('Failed to generate batch summary');
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to generate batch summary');
       console.error(error);
     } finally {
       setIsAnalyzing(false);
@@ -54,8 +54,8 @@ export default function AIAnalysisPage() {
       const analysis = await analyzeComplaint(inputText);
       setResults(analysis);
       toast.success('Analysis complete');
-    } catch (error) {
-      toast.error('Failed to analyze text');
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to analyze text');
       console.error(error);
     } finally {
       setIsAnalyzing(false);
