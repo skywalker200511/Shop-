@@ -12,7 +12,7 @@ export async function analyzeComplaint(text: string): Promise<Partial<AIAnalysis
 
   try {
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${GEMINI_API_KEY}`,
       {
         method: 'POST',
         headers: {
@@ -77,7 +77,7 @@ export async function analyzeComplaint(text: string): Promise<Partial<AIAnalysis
       root_cause: parsedResult.root_cause || 'Unknown',
       risk_score: parsedResult.risk_score || 50,
       confidence: parsedResult.confidence || 0.8,
-      model: 'gemini-1.5-pro',
+      model: 'gemini-3.6-flash',
       processing_time_ms: Math.floor(Math.random() * 500) + 1000,
       created_at: new Date().toISOString(),
     };
@@ -127,7 +127,7 @@ export async function analyzeAllComplaints(complaints: any[]): Promise<any> {
 
   try {
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${GEMINI_API_KEY}`,
       {
         method: 'POST',
         headers: {
