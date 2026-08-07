@@ -116,9 +116,9 @@ export default function SubmitComplaintPage() {
       
       toast.success('Complaint submitted successfully');
       navigate('/customer/dashboard');
-    } catch (error) {
-      console.error(error);
-      toast.error('Failed to submit complaint');
+    } catch (error: any) {
+      console.error("Complaint Submission Error:", error);
+      toast.error(`Failed to submit complaint: ${error?.message || 'Unknown error'}`);
     } finally {
       setIsSubmitting(false);
     }

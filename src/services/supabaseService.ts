@@ -61,9 +61,24 @@ export const supabaseService = {
   },
 
   async createComplaint(complaint: Partial<Complaint>): Promise<Complaint> {
+    const payload = { ...complaint };
+    
+    // Assign a default department if missing
+    if (!payload.department_id) {
+      const { data: depts } = await supabase.from('departments').select('id').limit(1);
+      if (depts && depts.length > 0) {
+        payload.department_id = depts[0].id;
+      }
+    }
+    
+    // Assign a default complaint number if missing
+    if (!payload.complaint_number) {
+      payload.complaint_number = 'CMP-' + Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
+    }
+
     const { data, error } = await supabase
       .from('complaints')
-      .insert(complaint)
+      .insert(payload)
       .select()
       .single();
       
@@ -100,7 +115,25 @@ export const supabaseService = {
       .eq('user_id', userId)
       .single();
       
-    if (error) throw error;
+    if (error && error.code === 'PGRST116') {
+      // 0 rows returned, let's create a profile for them
+      const { data: newCustomer, error: insertError } = await supabase
+        .from('customers')
+        .insert({
+          user_id: userId,
+          company: 'N/A',
+          phone: 'N/A',
+          total_complaints: 0
+        })
+        .select('*, user:users(*)')
+        .single();
+        
+      if (insertError) throw insertError;
+      return newCustomer as Customer;
+    } else if (error) {
+      throw error;
+    }
+    
     return data as Customer;
   },
 
