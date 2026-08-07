@@ -25,7 +25,7 @@ import {
   Trash2
 } from 'lucide-react';
 
-import type { Complaint, Comment } from '@/types';
+import type { Complaint, Comment, Customer, Department } from '@/types';
 import { ComplaintPriority, ComplaintStatus, ComplaintCategory } from '@/types';
 import { supabaseService } from '@/services/supabaseService';
 import { GlassCard } from '@/components/shared/GlassCard';
@@ -161,6 +161,15 @@ export default function ComplaintListPage() {
   };
 
   const [isNewModalOpen, setIsNewModalOpen] = useState(false);
+  const [availableCustomers, setAvailableCustomers] = useState<Customer[]>([]);
+  const [availableDepartments, setAvailableDepartments] = useState<Department[]>([]);
+
+  useEffect(() => {
+    if (isNewModalOpen) {
+      supabaseService.getCustomers().then(setAvailableCustomers).catch(console.error);
+      supabaseService.getDepartments().then(setAvailableDepartments).catch(console.error);
+    }
+  }, [isNewModalOpen]);
 
   // Form
   const { register, handleSubmit, formState: { errors }, reset } = useForm<z.infer<typeof newComplaintSchema>>({
@@ -769,29 +778,33 @@ export default function ComplaintListPage() {
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-1">Customer</label>
-                      <select 
-                        {...register('customer_id')}
-                        className="w-full bg-[#090909] border border-[#2a2a2a] rounded-[10px] p-2.5 text-sm focus:outline-none focus:border-[#E11D48] text-white"
-                      >
-                        <option value="">Select Customer</option>
-                        <option value="cust_1">Acme Corp</option>
-                        <option value="cust_2">Globex Inc</option>
-                      </select>
-                      {errors.customer_id && <p className="text-[#E11D48] text-xs mt-1">{errors.customer_id.message}</p>}
-                    </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-300 mb-1">Customer</label>
+                        <select 
+                          {...register('customer_id')}
+                          className="w-full bg-[#090909] border border-[#2a2a2a] rounded-[10px] p-2.5 text-sm focus:outline-none focus:border-[#E11D48] text-white"
+                        >
+                          <option value="">Select Customer</option>
+                          {availableCustomers.map(c => (
+                            <option key={c.id} value={c.id}>{c.company} - {c.user?.full_name}</option>
+                          ))}
+                        </select>
+                        {errors.customer_id && <p className="text-[#E11D48] text-xs mt-1">{errors.customer_id.message}</p>}
+                      </div>
 
-                    <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-1">Department</label>
-                      <select 
-                        {...register('department_id')}
-                        className="w-full bg-[#090909] border border-[#2a2a2a] rounded-[10px] p-2.5 text-sm focus:outline-none focus:border-[#E11D48] text-white"
-                      >
-                        <option value="">Select Department</option>
-                        <option value="dept_1">Customer Support</option>
-                        <option value="dept_2">Technical Ops</option>
-                      </select>
-                      {errors.department_id && <p className="text-[#E11D48] text-xs mt-1">{errors.department_id.message}</p>}
+                      <div>
+                        <label className="block text-sm font-medium text-gray-300 mb-1">Department</label>
+                        <select 
+                          {...register('department_id')}
+                          className="w-full bg-[#090909] border border-[#2a2a2a] rounded-[10px] p-2.5 text-sm focus:outline-none focus:border-[#E11D48] text-white"
+                        >
+                          <option value="">Select Department</option>
+                          {availableDepartments.map(d => (
+                            <option key={d.id} value={d.id}>{d.name}</option>
+                          ))}
+                        </select>
+                        {errors.department_id && <p className="text-[#E11D48] text-xs mt-1">{errors.department_id.message}</p>}
+                      </div>
                     </div>
 
                     <div>

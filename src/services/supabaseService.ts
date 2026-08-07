@@ -2,6 +2,23 @@ import { supabase } from '@/lib/supabase';
 import type { Complaint, Customer, Department, Employee, AIAnalysis, Comment } from '@/types';
 
 export const supabaseService = {
+  // New helper methods
+  async getCustomers(): Promise<Customer[]> {
+    const { data, error } = await supabase
+      .from('customers')
+      .select('*, user:users(*)');
+    if (error) throw error;
+    return data as Customer[];
+  },
+
+  async getDepartments(): Promise<Department[]> {
+    const { data, error } = await supabase
+      .from('departments')
+      .select('*');
+    if (error) throw error;
+    return data as Department[];
+  },
+
   // Complaints
   async getAllComplaints(filters?: { status?: string; priority?: string; category?: string }): Promise<Complaint[]> {
     let query = supabase
