@@ -180,7 +180,7 @@ export default function ComplaintListPage() {
     {
       accessorKey: 'complaint_number',
       header: ({ column }: any) => (
-        <div className="flex items-center cursor-pointer hover:text-[#0a0a0a]" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+        <div className="flex items-center cursor-pointer hover:text-white" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
           Complaint # <ArrowUpDown className="ml-2 h-4 w-4" />
         </div>
       ),
@@ -189,18 +189,18 @@ export default function ComplaintListPage() {
     {
       accessorKey: 'title',
       header: ({ column }: any) => (
-        <div className="flex items-center cursor-pointer hover:text-[#0a0a0a]" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+        <div className="flex items-center cursor-pointer hover:text-white" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
           Title <ArrowUpDown className="ml-2 h-4 w-4" />
         </div>
       ),
-      cell: (info: any) => <span className="font-medium text-[#0a0a0a]">{info.getValue()}</span>
+      cell: (info: any) => <span className="font-medium text-white">{info.getValue()}</span>
     },
     {
       accessorKey: 'customer',
       header: 'Customer',
       cell: (info: any) => {
         const row = info.row.original;
-        return <span className="text-[#555550]">{row.customer?.company || row.customer?.user?.full_name || row.customer_id}</span>
+        return <span className="text-gray-300">{row.customer?.company || row.customer?.user?.full_name || row.customer_id}</span>
       }
     },
     {
@@ -218,7 +218,7 @@ export default function ComplaintListPage() {
       header: 'Category',
       cell: (info: any) => {
         const row = info.row.original;
-        return <span className="text-[#555550] capitalize">{row.category.replace('_', ' ')}</span>
+        return <span className="text-gray-300 capitalize">{row.category.replace('_', ' ')}</span>
       }
     },
     {
@@ -226,22 +226,22 @@ export default function ComplaintListPage() {
       header: 'Department',
       cell: (info: any) => {
         const row = info.row.original;
-        return <span className="text-[#555550] capitalize">{row.department?.name || row.department_id}</span>
+        return <span className="text-gray-300 capitalize">{row.department?.name || row.department_id}</span>
       }
     },
     {
       accessorKey: 'assignee',
       header: 'Assignee',
-      cell: (info: any) => <span className="text-[#555550]">{info.getValue()}</span>
+      cell: (info: any) => <span className="text-gray-300">{info.getValue()}</span>
     },
     {
       accessorKey: 'created_at',
       header: ({ column }: any) => (
-        <div className="flex items-center cursor-pointer hover:text-[#0a0a0a]" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+        <div className="flex items-center cursor-pointer hover:text-white" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
           Created <ArrowUpDown className="ml-2 h-4 w-4" />
         </div>
       ),
-      cell: (info: any) => <span className="text-[#555550]">{formatDate(info.getValue())}</span>
+      cell: (info: any) => <span className="text-gray-300">{formatDate(info.getValue())}</span>
     },
     {
       accessorKey: 'sla_breached',
@@ -307,7 +307,7 @@ export default function ComplaintListPage() {
   };
 
   return (
-    <div className="p-6 w-full min-w-0 max-w-[1600px] mx-auto min-h-[calc(100vh-2rem)] my-4 bg-white/80 backdrop-blur-md text-[#0a0a0a] font-inter border-2 border-slate-200 shadow-xl rounded-[24px]">
+    <div className="p-6 w-full min-w-0 max-w-[1600px] mx-auto min-h-[calc(100vh-2rem)] my-4 bg-[#090909] text-white font-inter rounded-[24px] shadow-2xl">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Complaints</h1>
         <button
@@ -323,20 +323,20 @@ export default function ComplaintListPage() {
         <div className="flex flex-wrap gap-4 items-center justify-between">
           <div className="flex flex-wrap gap-4 items-center flex-1">
             <div className="relative w-64">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#737370]" size={18} />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
               <input
                 type="text"
                 placeholder="Search complaints..."
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
-                className="w-full bg-white/80 backdrop-blur-md border-2 border-slate-200 shadow-sm rounded-[10px] pl-10 pr-4 py-2 text-sm focus:outline-none focus:border-[#E11D48] text-[#0a0a0a]"
+                className="w-full bg-[#090909] border border-[#2a2a2a] rounded-[10px] pl-10 pr-4 py-2 text-sm focus:outline-none focus:border-[#E11D48] text-white"
               />
             </div>
 
             <select
               value={priorityFilter}
               onChange={e => setPriorityFilter(e.target.value)}
-              className="bg-white/80 backdrop-blur-md border-2 border-slate-200 shadow-sm rounded-[10px] px-3 py-2 text-sm focus:outline-none focus:border-[#E11D48] text-[#0a0a0a]"
+              className="bg-[#090909] border border-[#2a2a2a] rounded-[10px] px-3 py-2 text-sm focus:outline-none focus:border-[#E11D48] text-white"
             >
               <option value="All">All Priorities</option>
               <option value="Critical">Critical</option>
@@ -348,7 +348,7 @@ export default function ComplaintListPage() {
             <select
               value={statusFilter}
               onChange={e => setStatusFilter(e.target.value)}
-              className="bg-white/80 backdrop-blur-md border-2 border-slate-200 shadow-sm rounded-[10px] px-3 py-2 text-sm focus:outline-none focus:border-[#E11D48] text-[#0a0a0a]"
+              className="bg-[#090909] border border-[#2a2a2a] rounded-[10px] px-3 py-2 text-sm focus:outline-none focus:border-[#E11D48] text-white"
             >
               <option value="All">All Statuses</option>
               <option value="Open">Open</option>
@@ -361,7 +361,7 @@ export default function ComplaintListPage() {
             <select
               value={categoryFilter}
               onChange={e => setCategoryFilter(e.target.value)}
-              className="bg-white/80 backdrop-blur-md border-2 border-slate-200 shadow-sm rounded-[10px] px-3 py-2 text-sm focus:outline-none focus:border-[#E11D48] text-[#0a0a0a]"
+              className="bg-[#090909] border border-[#2a2a2a] rounded-[10px] px-3 py-2 text-sm focus:outline-none focus:border-[#E11D48] text-white"
             >
               <option value="All">All Categories</option>
               <option value="Billing">Billing</option>
@@ -374,7 +374,7 @@ export default function ComplaintListPage() {
 
             <button
               onClick={clearFilters}
-              className="text-[#737370] hover:text-[#0a0a0a] text-sm px-3 py-2"
+              className="text-gray-400 hover:text-white text-sm px-3 py-2"
             >
               Clear Filters
             </button>
@@ -383,14 +383,14 @@ export default function ComplaintListPage() {
           <div className="flex gap-2">
             <button
               onClick={exportCSV}
-              className="bg-[#fafaf7] border-2 border-slate-200 shadow-sm hover:bg-[#e0e0da] text-[#0a0a0a] px-3 py-2 rounded-[10px] flex items-center gap-2 transition-colors text-sm"
+              className="bg-[#1f1f1f] border border-[#2a2a2a] hover:bg-[#2a2a2a] text-white px-3 py-2 rounded-[10px] flex items-center gap-2 transition-colors text-sm"
             >
               <Download size={16} />
               Export CSV
             </button>
             <button
               onClick={exportPDF}
-              className="bg-[#fafaf7] border-2 border-slate-200 shadow-sm hover:bg-[#e0e0da] text-[#0a0a0a] px-3 py-2 rounded-[10px] flex items-center gap-2 transition-colors text-sm"
+              className="bg-[#1f1f1f] border border-[#2a2a2a] hover:bg-[#2a2a2a] text-white px-3 py-2 rounded-[10px] flex items-center gap-2 transition-colors text-sm"
             >
               <FileText size={16} />
               Export PDF
@@ -412,16 +412,16 @@ export default function ComplaintListPage() {
             icon={<Search className="w-12 h-12" />}
             title="No complaints found"
             description="Try adjusting your filters or search term."
-            action={<button onClick={clearFilters} className="bg-surface-variant hover:bg-surface-variant-highest text-[#0a0a0a] px-4 py-2 rounded-md font-medium text-sm">Clear Filters</button>}
+            action={<button onClick={clearFilters} className="bg-surface-variant hover:bg-surface-variant-highest text-white px-4 py-2 rounded-md font-medium text-sm">Clear Filters</button>}
           />
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
                 {table.getHeaderGroups().map((headerGroup: any) => (
-                  <tr key={headerGroup.id} className="border-b-2 border-slate-100 bg-white">
+                  <tr key={headerGroup.id} className="border-b border-[#2a2a2a] bg-[#121212]">
                     {headerGroup.headers.map((header: any) => (
-                      <th key={header.id} className="p-4 font-semibold text-[#737370] text-sm whitespace-nowrap">
+                      <th key={header.id} className="p-4 font-semibold text-gray-400 text-sm whitespace-nowrap">
                         {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                       </th>
                     ))}
@@ -433,7 +433,7 @@ export default function ComplaintListPage() {
                   <tr
                     key={row.id}
                     onClick={() => setSelectedComplaint(row.original)}
-                    className="border-b-2 border-slate-100 hover:bg-[#fafaf7] cursor-pointer transition-colors"
+                    className="border-b border-[#2a2a2a] hover:bg-[#1f1f1f] cursor-pointer transition-colors"
                   >
                     {row.getVisibleCells().map((cell: any) => (
                       <td key={cell.id} className="p-4 text-sm whitespace-nowrap">
@@ -448,8 +448,8 @@ export default function ComplaintListPage() {
         )}
 
         {!isLoading && filteredData.length > 0 && (
-          <div className="p-4 border-t-2 border-slate-100 flex items-center justify-between">
-            <div className="text-sm text-[#737370]">
+          <div className="p-4 border-t border-[#2a2a2a] flex items-center justify-between">
+            <div className="text-sm text-gray-400">
               Showing {table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1} to{' '}
               {Math.min((table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize, filteredData.length)} of{' '}
               {filteredData.length} entries
@@ -458,7 +458,7 @@ export default function ComplaintListPage() {
               <select
                 value={table.getState().pagination.pageSize}
                 onChange={e => table.setPageSize(Number(e.target.value))}
-                className="bg-white/80 backdrop-blur-md border-2 border-slate-200 shadow-sm rounded-[10px] px-2 py-1 text-sm focus:outline-none focus:border-[#E11D48] text-[#0a0a0a]"
+                className="bg-[#090909] border border-[#2a2a2a] rounded-[10px] px-2 py-1 text-sm focus:outline-none focus:border-[#E11D48] text-white"
               >
                 {[10, 25, 50].map(pageSize => (
                   <option key={pageSize} value={pageSize}>
@@ -470,14 +470,14 @@ export default function ComplaintListPage() {
                 <button
                   onClick={() => table.previousPage()}
                   disabled={!table.getCanPreviousPage()}
-                  className="p-1 rounded bg-[#fafaf7] border-2 border-slate-200 shadow-sm disabled:opacity-50 text-[#0a0a0a] hover:bg-[#e0e0da] transition-colors"
+                  className="p-1 rounded bg-[#1f1f1f] border border-[#2a2a2a] disabled:opacity-50 text-white hover:bg-[#2a2a2a] transition-colors"
                 >
                   <ChevronLeft size={20} />
                 </button>
                 <button
                   onClick={() => table.nextPage()}
                   disabled={!table.getCanNextPage()}
-                  className="p-1 rounded bg-[#fafaf7] border-2 border-slate-200 shadow-sm disabled:opacity-50 text-[#0a0a0a] hover:bg-[#e0e0da] transition-colors"
+                  className="p-1 rounded bg-[#1f1f1f] border border-[#2a2a2a] disabled:opacity-50 text-white hover:bg-[#2a2a2a] transition-colors"
                 >
                   <ChevronRight size={20} />
                 </button>
@@ -502,9 +502,9 @@ export default function ComplaintListPage() {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed top-0 right-0 h-full w-full md:w-1/2 bg-[#171717] border-l-2 border-slate-200 z-50 flex flex-col shadow-2xl"
+              className="fixed top-0 right-0 h-full w-full md:w-1/2 bg-[#171717] border-l border-[#2a2a2a] z-50 flex flex-col shadow-2xl"
             >
-              <div className="p-6 border-b-2 border-slate-100 flex justify-between items-start">
+              <div className="p-6 border-b border-[#2a2a2a] flex justify-between items-start">
                 <div>
                   <div className="flex items-center gap-3 mb-2">
                     <span className="bg-[#2a2a2a] px-2 py-1 rounded text-xs font-mono text-[#e5bdbe]">
@@ -513,11 +513,11 @@ export default function ComplaintListPage() {
                     <PriorityBadge priority={selectedComplaint.priority} />
                     <StatusBadge status={selectedComplaint.status} />
                   </div>
-                  <h2 className="text-2xl font-bold text-[#0a0a0a]">{selectedComplaint.title}</h2>
+                  <h2 className="text-2xl font-bold text-white">{selectedComplaint.title}</h2>
                 </div>
                 <button
                   onClick={() => setSelectedComplaint(null)}
-                  className="text-[#737370] hover:text-[#0a0a0a] transition-colors p-2"
+                  className="text-gray-400 hover:text-white transition-colors p-2"
                 >
                   <X size={24} />
                 </button>
@@ -525,19 +525,19 @@ export default function ComplaintListPage() {
 
               <div className="flex-1 overflow-y-auto p-6 space-y-8">
                 <div>
-                  <h3 className="text-sm font-semibold text-[#737370] uppercase tracking-wider mb-3">Customer Information</h3>
-                  <div className="bg-white rounded-[10px] border-2 border-slate-200 shadow-sm p-4">
+                  <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">Customer Information</h3>
+                  <div className="bg-[#121212] rounded-[10px] border border-[#2a2a2a] p-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <div className="text-sm text-[#a0a09a]">Company</div>
+                        <div className="text-sm text-gray-500">Company</div>
                         <div className="font-medium">{selectedComplaint.customer?.company || 'N/A'}</div>
                       </div>
                       <div>
-                        <div className="text-sm text-[#a0a09a]">Contact</div>
+                        <div className="text-sm text-gray-500">Contact</div>
                         <div className="font-medium">{selectedComplaint.customer?.user?.full_name || 'N/A'}</div>
                       </div>
                       <div className="col-span-2">
-                        <div className="text-sm text-[#a0a09a]">Email</div>
+                        <div className="text-sm text-gray-500">Email</div>
                         <div className="font-medium text-[#3B82F6]">{selectedComplaint.customer?.user?.email || 'N/A'}</div>
                       </div>
                     </div>
@@ -545,20 +545,20 @@ export default function ComplaintListPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-sm font-semibold text-[#737370] uppercase tracking-wider mb-3">Description</h3>
-                  <div className="bg-white rounded-[10px] border-2 border-slate-200 shadow-sm p-4 text-sm leading-relaxed whitespace-pre-wrap">
+                  <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">Description</h3>
+                  <div className="bg-[#121212] rounded-[10px] border border-[#2a2a2a] p-4 text-sm leading-relaxed whitespace-pre-wrap">
                     {selectedComplaint.description}
                   </div>
                 </div>
 
                 <div>
-                  <h3 className="text-sm font-semibold text-[#737370] uppercase tracking-wider mb-3">Timeline</h3>
-                  <div className="bg-white rounded-[10px] border-2 border-slate-200 shadow-sm p-4 space-y-4">
+                  <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">Timeline</h3>
+                  <div className="bg-[#121212] rounded-[10px] border border-[#2a2a2a] p-4 space-y-4">
                     <div className="flex gap-4">
                       <div className="w-2 bg-[#74D8BD] rounded-full my-1"></div>
                       <div>
                         <div className="text-sm font-medium">Complaint Created</div>
-                        <div className="text-xs text-[#a0a09a]">{formatDate(selectedComplaint.created_at)}</div>
+                        <div className="text-xs text-gray-500">{formatDate(selectedComplaint.created_at)}</div>
                       </div>
                     </div>
                     {selectedComplaint.updated_at !== selectedComplaint.created_at && (
@@ -566,7 +566,7 @@ export default function ComplaintListPage() {
                         <div className="w-2 bg-[#3B82F6] rounded-full my-1"></div>
                         <div>
                           <div className="text-sm font-medium">Last Updated</div>
-                          <div className="text-xs text-[#a0a09a]">{formatDate(selectedComplaint.updated_at)}</div>
+                          <div className="text-xs text-gray-500">{formatDate(selectedComplaint.updated_at)}</div>
                         </div>
                       </div>
                     )}
@@ -574,8 +574,8 @@ export default function ComplaintListPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-sm font-semibold text-[#737370] uppercase tracking-wider mb-3">Messages & Notes</h3>
-                  <div className="bg-white rounded-[10px] border-2 border-slate-200 shadow-sm overflow-hidden flex flex-col h-[400px]">
+                  <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">Messages & Notes</h3>
+                  <div className="bg-[#121212] rounded-[10px] border border-[#2a2a2a] overflow-hidden flex flex-col h-[400px]">
                     <div className="flex-1 overflow-y-auto p-4 space-y-4">
                       {isCommentsLoading ? (
                         <div className="animate-pulse flex space-x-4">
@@ -585,7 +585,7 @@ export default function ComplaintListPage() {
                           </div>
                         </div>
                       ) : activeComments.length === 0 ? (
-                        <div className="text-sm text-[#a0a09a] text-center py-4 italic">No messages or notes yet.</div>
+                        <div className="text-sm text-gray-500 text-center py-4 italic">No messages or notes yet.</div>
                       ) : (
                         activeComments.map(comment => {
                           const isCustomer = comment.user?.role === 'customer';
@@ -594,15 +594,15 @@ export default function ComplaintListPage() {
                               <div className={cn(
                                 "px-4 py-2 max-w-[85%] text-sm rounded-2xl",
                                 isCustomer 
-                                  ? "bg-[#fafaf7] text-[#0a0a0a] rounded-bl-none border-2 border-slate-200 shadow-sm" 
+                                  ? "bg-[#1f1f1f] text-white rounded-bl-none border border-[#2a2a2a]" 
                                   : comment.is_internal 
                                     ? "bg-amber-500/20 text-amber-200 rounded-br-none border border-amber-500/30"
-                                    : "bg-[#3B82F6] text-[#0a0a0a] rounded-br-none"
+                                    : "bg-[#3B82F6] text-white rounded-br-none"
                               )}>
                                 {comment.is_internal && <div className="text-[10px] uppercase font-bold text-amber-500 mb-1">Internal Note</div>}
                                 {comment.content}
                               </div>
-                              <span className="text-xs text-[#a0a09a] mt-1">
+                              <span className="text-xs text-gray-500 mt-1">
                                 {comment.user?.full_name || 'User'} • {new Date(comment.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                               </span>
                             </div>
@@ -610,25 +610,25 @@ export default function ComplaintListPage() {
                         })
                       )}
                     </div>
-                    <div className="p-3 border-t-2 border-slate-100 bg-white/80 backdrop-blur-md">
+                    <div className="p-3 border-t border-[#2a2a2a] bg-[#090909]">
                       <textarea 
                         placeholder="Type a message or internal note..." 
                         value={messageText}
                         onChange={(e) => setMessageText(e.target.value)}
-                        className="w-full bg-[#171717] border-2 border-slate-200 shadow-sm rounded-[10px] p-3 text-sm focus:outline-none focus:border-[#E11D48] text-[#0a0a0a] min-h-[80px] resize-none mb-3"
+                        className="w-full bg-[#171717] border border-[#2a2a2a] rounded-[10px] p-3 text-sm focus:outline-none focus:border-[#E11D48] text-white min-h-[80px] resize-none mb-3"
                       />
                       <div className="flex gap-2 justify-end">
                         <button 
                           onClick={() => handleSendMessage(true)}
                           disabled={isSendingMessage || !messageText.trim()}
-                          className="bg-[#fafaf7] border-2 border-slate-200 shadow-sm hover:bg-[#e0e0da] disabled:opacity-50 text-[#0a0a0a] px-4 py-2 rounded-[10px] text-sm transition-colors"
+                          className="bg-[#1f1f1f] border border-[#2a2a2a] hover:bg-[#2a2a2a] disabled:opacity-50 text-white px-4 py-2 rounded-[10px] text-sm transition-colors"
                         >
                           Add Internal Note
                         </button>
                         <button 
                           onClick={() => handleSendMessage(false)}
                           disabled={isSendingMessage || !messageText.trim()}
-                          className="bg-[#3B82F6] hover:bg-blue-600 disabled:opacity-50 text-[#0a0a0a] px-4 py-2 rounded-[10px] text-sm font-medium transition-colors"
+                          className="bg-[#3B82F6] hover:bg-blue-600 disabled:opacity-50 text-white px-4 py-2 rounded-[10px] text-sm font-medium transition-colors"
                         >
                           Send to Customer
                         </button>
@@ -638,12 +638,12 @@ export default function ComplaintListPage() {
                 </div>
               </div>
 
-              <div className="p-4 border-t-2 border-slate-100 bg-white flex gap-3">
+              <div className="p-4 border-t border-[#2a2a2a] bg-[#121212] flex gap-3">
                 <select 
                   value=""
                   onChange={handleStatusChange}
                   disabled={isUpdating}
-                  className="bg-white/80 backdrop-blur-md border-2 border-slate-200 shadow-sm rounded-[10px] px-3 py-2 text-sm focus:outline-none focus:border-[#E11D48] text-[#0a0a0a] flex-1"
+                  className="bg-[#090909] border border-[#2a2a2a] rounded-[10px] px-3 py-2 text-sm focus:outline-none focus:border-[#E11D48] text-white flex-1"
                 >
                   <option value="">Change Status (Current: {selectedComplaint.status})</option>
                   <option value="open">Open</option>
@@ -670,21 +670,21 @@ export default function ComplaintListPage() {
                 initial={{ opacity: 0, scale: 0.95, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                className="bg-[#171717] border-2 border-slate-200 shadow-sm rounded-xl w-full max-w-2xl shadow-2xl overflow-hidden"
+                className="bg-[#171717] border border-[#2a2a2a] rounded-xl w-full max-w-2xl shadow-2xl overflow-hidden"
               >
-                <div className="p-6 border-b-2 border-slate-100 flex justify-between items-center bg-white">
-                  <h2 className="text-xl font-bold text-[#0a0a0a]">Create New Complaint</h2>
-                  <button onClick={() => setIsNewModalOpen(false)} className="text-[#737370] hover:text-[#0a0a0a] transition-colors">
+                <div className="p-6 border-b border-[#2a2a2a] flex justify-between items-center bg-[#121212]">
+                  <h2 className="text-xl font-bold text-white">Create New Complaint</h2>
+                  <button onClick={() => setIsNewModalOpen(false)} className="text-gray-400 hover:text-white transition-colors">
                     <X size={24} />
                   </button>
                 </div>
                 
                 <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-[#555550] mb-1">Title</label>
+                    <label className="block text-sm font-medium text-gray-300 mb-1">Title</label>
                     <input 
                       {...register('title')} 
-                      className="w-full bg-white/80 backdrop-blur-md border-2 border-slate-200 shadow-sm rounded-[10px] p-2.5 text-sm focus:outline-none focus:border-[#E11D48] text-[#0a0a0a]"
+                      className="w-full bg-[#090909] border border-[#2a2a2a] rounded-[10px] p-2.5 text-sm focus:outline-none focus:border-[#E11D48] text-white"
                       placeholder="Brief summary of the issue"
                     />
                     {errors.title && <p className="text-[#E11D48] text-xs mt-1">{errors.title.message}</p>}
@@ -692,10 +692,10 @@ export default function ComplaintListPage() {
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-[#555550] mb-1">Customer</label>
+                      <label className="block text-sm font-medium text-gray-300 mb-1">Customer</label>
                       <select 
                         {...register('customer_id')}
-                        className="w-full bg-white/80 backdrop-blur-md border-2 border-slate-200 shadow-sm rounded-[10px] p-2.5 text-sm focus:outline-none focus:border-[#E11D48] text-[#0a0a0a]"
+                        className="w-full bg-[#090909] border border-[#2a2a2a] rounded-[10px] p-2.5 text-sm focus:outline-none focus:border-[#E11D48] text-white"
                       >
                         <option value="">Select Customer</option>
                         <option value="cust_1">Acme Corp</option>
@@ -705,10 +705,10 @@ export default function ComplaintListPage() {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-[#555550] mb-1">Department</label>
+                      <label className="block text-sm font-medium text-gray-300 mb-1">Department</label>
                       <select 
                         {...register('department_id')}
-                        className="w-full bg-white/80 backdrop-blur-md border-2 border-slate-200 shadow-sm rounded-[10px] p-2.5 text-sm focus:outline-none focus:border-[#E11D48] text-[#0a0a0a]"
+                        className="w-full bg-[#090909] border border-[#2a2a2a] rounded-[10px] p-2.5 text-sm focus:outline-none focus:border-[#E11D48] text-white"
                       >
                         <option value="">Select Department</option>
                         <option value="dept_1">Customer Support</option>
@@ -718,10 +718,10 @@ export default function ComplaintListPage() {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-[#555550] mb-1">Category</label>
+                      <label className="block text-sm font-medium text-gray-300 mb-1">Category</label>
                       <select 
                         {...register('category')}
-                        className="w-full bg-white/80 backdrop-blur-md border-2 border-slate-200 shadow-sm rounded-[10px] p-2.5 text-sm focus:outline-none focus:border-[#E11D48] text-[#0a0a0a]"
+                        className="w-full bg-[#090909] border border-[#2a2a2a] rounded-[10px] p-2.5 text-sm focus:outline-none focus:border-[#E11D48] text-white"
                       >
                         <option value="">Select Category</option>
                         <option value="billing">Billing</option>
@@ -735,10 +735,10 @@ export default function ComplaintListPage() {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-[#555550] mb-1">Priority</label>
+                      <label className="block text-sm font-medium text-gray-300 mb-1">Priority</label>
                       <select 
                         {...register('priority')}
-                        className="w-full bg-white/80 backdrop-blur-md border-2 border-slate-200 shadow-sm rounded-[10px] p-2.5 text-sm focus:outline-none focus:border-[#E11D48] text-[#0a0a0a]"
+                        className="w-full bg-[#090909] border border-[#2a2a2a] rounded-[10px] p-2.5 text-sm focus:outline-none focus:border-[#E11D48] text-white"
                       >
                         <option value="">Select Priority</option>
                         <option value="low">Low</option>
@@ -751,26 +751,26 @@ export default function ComplaintListPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-[#555550] mb-1">Description</label>
+                    <label className="block text-sm font-medium text-gray-300 mb-1">Description</label>
                     <textarea 
                       {...register('description')}
-                      className="w-full bg-white/80 backdrop-blur-md border-2 border-slate-200 shadow-sm rounded-[10px] p-2.5 text-sm focus:outline-none focus:border-[#E11D48] text-[#0a0a0a] min-h-[120px]"
+                      className="w-full bg-[#090909] border border-[#2a2a2a] rounded-[10px] p-2.5 text-sm focus:outline-none focus:border-[#E11D48] text-white min-h-[120px]"
                       placeholder="Provide detailed description of the complaint..."
                     />
                     {errors.description && <p className="text-[#E11D48] text-xs mt-1">{errors.description.message}</p>}
                   </div>
 
-                  <div className="pt-4 flex justify-end gap-3 border-t-2 border-slate-100 mt-6">
+                  <div className="pt-4 flex justify-end gap-3 border-t border-[#2a2a2a] mt-6">
                     <button
                       type="button"
                       onClick={() => setIsNewModalOpen(false)}
-                      className="px-4 py-2 rounded-[10px] text-sm font-medium text-[#555550] hover:bg-[#e0e0da] transition-colors"
+                      className="px-4 py-2 rounded-[10px] text-sm font-medium text-gray-300 hover:bg-[#2a2a2a] transition-colors"
                     >
                       Cancel
                     </button>
                     <button
                       type="submit"
-                      className="bg-[#E11D48] hover:bg-[#E11D48]/90 text-[#0a0a0a] px-4 py-2 rounded-[10px] text-sm font-medium transition-colors"
+                      className="bg-[#E11D48] hover:bg-[#E11D48]/90 text-white px-4 py-2 rounded-[10px] text-sm font-medium transition-colors"
                     >
                       Create Complaint
                     </button>
