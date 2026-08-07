@@ -5,7 +5,6 @@ import { AuthProvider, useAuth } from '@/contexts/AuthContext';
 import { SidebarProvider } from '@/contexts/SidebarContext';
 import { StaffLayout } from '@/components/layout/StaffLayout';
 import { CustomerLayout } from '@/components/layout/CustomerLayout';
-import { CustomCursor } from '@/components/shared/CustomCursor';
 import { MouseGradient } from '@/components/shared/MouseGradient';
 import { PS4Background } from '@/components/shared/PS4Background';
 
@@ -184,7 +183,6 @@ export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <CustomCursor />
         <MouseGradient />
         <PS4Background />
         <div className="noise-overlay" />
