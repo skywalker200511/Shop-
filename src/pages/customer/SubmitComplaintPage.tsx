@@ -189,7 +189,7 @@ export default function SubmitComplaintPage() {
 
           {/* AI Suggestions Box */}
           <AnimatePresence>
-            {aiSuggestions && (
+            {(aiSuggestions || isAnalyzing) && (
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
@@ -197,37 +197,46 @@ export default function SubmitComplaintPage() {
                 className="overflow-hidden"
               >
                 <div className="bg-[#1e3a8a]/10 border border-[#1e3a8a]/30 rounded-[10px] p-4 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-                  <div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <Sparkles className="w-4 h-4 text-[#3B82F6]" />
-                      <span className="text-sm font-medium text-[#3B82F6]">AI Suggestion</span>
-                      <AiBadge />
+                  {isAnalyzing ? (
+                    <div className="flex items-center gap-3 w-full py-2">
+                      <div className="w-5 h-5 border-2 border-[#3B82F6] border-t-transparent rounded-full animate-spin"></div>
+                      <span className="text-sm font-medium text-[#3B82F6]">AI is analyzing your complaint...</span>
                     </div>
-                    <p className="text-xs text-[#4a4a4a]">
-                      Based on your description, this seems like a <strong className="text-[#0a0a0a] capitalize">{aiSuggestions.priority}</strong> priority <strong className="text-[#0a0a0a] capitalize">{aiSuggestions.category}</strong> issue.
-                    </p>
-                    {aiSuggestions.duplicates && aiSuggestions.duplicates > 0 && (
-                      <button type="button" className="text-xs text-[#E11D48] mt-1 hover:underline">
-                        We found {aiSuggestions.duplicates} similar complaints
-                      </button>
-                    )}
-                  </div>
-                  <div className="flex gap-2 w-full sm:w-auto shrink-0">
-                    <button
-                      type="button"
-                      onClick={() => setAiSuggestions(null)}
-                      className="px-3 py-1.5 text-xs text-[#4a4a4a] hover:text-[#0a0a0a] transition-colors"
-                    >
-                      Ignore
-                    </button>
-                    <button
-                      type="button"
-                      onClick={applySuggestions}
-                      className="px-3 py-1.5 bg-[#3B82F6] hover:bg-blue-600 text-[#0a0a0a] rounded text-xs transition-colors"
-                    >
-                      Apply Auto-fill
-                    </button>
-                  </div>
+                  ) : aiSuggestions ? (
+                    <>
+                      <div>
+                        <div className="flex items-center gap-2 mb-2">
+                          <Sparkles className="w-4 h-4 text-[#3B82F6]" />
+                          <span className="text-sm font-medium text-[#3B82F6]">AI Suggestion</span>
+                          <AiBadge />
+                        </div>
+                        <p className="text-xs text-[#4a4a4a]">
+                          Based on your description, this seems like a <strong className="text-[#0a0a0a] capitalize">{aiSuggestions.priority}</strong> priority <strong className="text-[#0a0a0a] capitalize">{aiSuggestions.category}</strong> issue.
+                        </p>
+                        {aiSuggestions.duplicates && aiSuggestions.duplicates > 0 && (
+                          <button type="button" className="text-xs text-[#E11D48] mt-1 hover:underline">
+                            We found {aiSuggestions.duplicates} similar complaints
+                          </button>
+                        )}
+                      </div>
+                      <div className="flex gap-2 w-full sm:w-auto shrink-0">
+                        <button
+                          type="button"
+                          onClick={() => setAiSuggestions(null)}
+                          className="px-3 py-1.5 text-xs text-[#4a4a4a] hover:text-[#0a0a0a] transition-colors"
+                        >
+                          Ignore
+                        </button>
+                        <button
+                          type="button"
+                          onClick={applySuggestions}
+                          className="px-3 py-1.5 bg-[#3B82F6] hover:bg-blue-600 text-[#0a0a0a] rounded text-xs transition-colors"
+                        >
+                          Apply Auto-fill
+                        </button>
+                      </div>
+                    </>
+                  ) : null}
                 </div>
               </motion.div>
             )}
