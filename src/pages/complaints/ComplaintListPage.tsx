@@ -455,6 +455,7 @@ export default function ComplaintListPage() {
               <option value="delivery">Delivery</option>
               <option value="refund">Refund</option>
               <option value="product_related">Product Related</option>
+              <option value="billing">Billing</option>
               <option value="service">Service</option>
               <option value="account">Account</option>
               <option value="other">Other</option>
@@ -829,6 +830,7 @@ export default function ComplaintListPage() {
                         <option value="delivery">Delivery</option>
                         <option value="refund">Refund</option>
                         <option value="product_related">Product Related</option>
+                        <option value="billing">Billing</option>
                         <option value="service">Service</option>
                         <option value="account">Account</option>
                         <option value="other">Other</option>

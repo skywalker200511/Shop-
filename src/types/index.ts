@@ -28,6 +28,7 @@ export const ComplaintCategory = {
   Delivery: 'delivery',
   Refund: 'refund',
   Product: 'product_related',
+  Billing: 'billing',
   Service: 'service',
   Account: 'account',
   Other: 'other'
