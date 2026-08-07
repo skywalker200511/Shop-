@@ -105,7 +105,7 @@ export default function SubmitComplaintPage() {
       const profile = await supabaseService.getCustomerProfile(user.id);
       if (!profile) throw new Error("Customer profile not found");
 
-      await supabaseService.createComplaint({
+      const newComplaint = await supabaseService.createComplaint({
         title: data.subject,
         description: data.description,
         category: data.category,
@@ -113,6 +113,19 @@ export default function SubmitComplaintPage() {
         priority: 'medium',
         status: 'open',
       });
+
+      // Upload attachments if any
+      if (uploadedFiles.length > 0) {
+        toast.info(`Uploading ${uploadedFiles.length} attachment(s)...`);
+        for (const file of uploadedFiles) {
+          try {
+            await supabaseService.uploadAttachment(newComplaint.id, file);
+          } catch (err) {
+            console.error("Failed to upload attachment:", err);
+            toast.error(`Failed to upload ${file.name}`);
+          }
+        }
+      }
       
       toast.success('Complaint submitted successfully');
       navigate('/customer/dashboard');

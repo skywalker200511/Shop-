@@ -27,7 +27,8 @@ export const supabaseService = {
         *,
         customer:customers(*, user:users(*)),
         department:departments(*),
-        assignee:employees(*, user:users(*))
+        assignee:employees(*, user:users(*)),
+        attachments:attachments(*)
       `)
       .order('created_at', { ascending: false });
 
@@ -53,7 +54,8 @@ export const supabaseService = {
         *,
         customer:customers(*, user:users(*)),
         department:departments(*),
-        assignee:employees(*, user:users(*))
+        assignee:employees(*, user:users(*)),
+        attachments:attachments(*)
       `)
       .eq('id', id)
       .single();
@@ -69,7 +71,8 @@ export const supabaseService = {
       .select(`
         *,
         customer:customers(*, user:users(*)),
-        department:departments(*)
+        department:departments(*),
+        attachments:attachments(*)
       `)
       .order('updated_at', { ascending: false });
       
@@ -122,6 +125,35 @@ export const supabaseService = {
       .eq('id', id);
       
     if (error) throw error;
+  },
+
+  // Attachments
+  async uploadAttachment(complaintId: string, file: File): Promise<void> {
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Math.random().toString(36).substring(2)}_${Date.now()}.${fileExt}`;
+    const filePath = `${complaintId}/${fileName}`;
+
+    // Upload to Storage
+    const { error: uploadError } = await supabase.storage
+      .from('attachments')
+      .upload(filePath, file);
+
+    if (uploadError) throw uploadError;
+
+    // Get public URL
+    const { data: { publicUrl } } = supabase.storage
+      .from('attachments')
+      .getPublicUrl(filePath);
+
+    // Insert into attachments table
+    const { error: dbError } = await supabase.from('attachments').insert({
+      complaint_id: complaintId,
+      file_name: file.name,
+      file_url: publicUrl,
+      file_type: file.type
+    });
+
+    if (dbError) throw dbError;
   },
 
   // Users & Profiles

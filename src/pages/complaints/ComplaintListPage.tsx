@@ -640,6 +640,22 @@ export default function ComplaintListPage() {
                   </div>
                 </div>
 
+                {selectedComplaint.attachments && selectedComplaint.attachments.length > 0 && (
+                  <div>
+                    <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">Attachments</h3>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                      {selectedComplaint.attachments.map(att => (
+                        <a key={att.id} href={att.file_url} target="_blank" rel="noopener noreferrer" className="group block relative rounded-[10px] overflow-hidden border border-[#2a2a2a] hover:border-[#E11D48] transition-colors">
+                          <img src={att.file_url} alt={att.file_name} className="w-full h-32 object-cover" />
+                          <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                            <span className="text-white text-xs font-medium">View File</span>
+                          </div>
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 <div>
                   <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">Timeline</h3>
                   <div className="bg-[#121212] rounded-[10px] border border-[#2a2a2a] p-4 space-y-4">

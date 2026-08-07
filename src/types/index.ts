@@ -121,6 +121,7 @@ export interface Complaint {
   created_at: string;
   updated_at: string;
   closed_at?: string;
+  attachments?: Attachment[];
 }
 
 export interface ComplaintHistory {
