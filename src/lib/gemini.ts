@@ -42,7 +42,10 @@ export async function analyzeComplaint(text: string): Promise<Partial<AIAnalysis
                 }
               ]
             }
-          ]
+          ],
+          generationConfig: {
+            thinkingConfig: { thinkingBudget: 0 }
+          }
         })
       }
     );
@@ -142,7 +145,7 @@ export async function analyzeAllComplaints(complaints: any[]): Promise<any> {
               parts: [
                 {
                   text: `Analyze the following list of customer complaints and provide a batch summary.
-                  Return the result strictly in this JSON format:
+                  Return the result strictly in this JSON format (no markdown, no code fences, just raw JSON):
                   {
                     "executive_summary": "A 2-3 sentence high-level overview of the overall sentiment and major problems.",
                     "recurring_issues": [
@@ -158,28 +161,72 @@ export async function analyzeAllComplaints(complaints: any[]): Promise<any> {
                 }
               ]
             }
-          ]
+          ],
+          generationConfig: {
+            thinkingConfig: { thinkingBudget: 0 }
+          }
         })
       }
     );
 
     if (!response.ok) {
+      const errorBody = await response.json().catch(() => null);
+      const errorMsg = errorBody?.error?.message || `API error: ${response.status}`;
       if (response.status === 429) {
         throw new Error('API Rate Limit Exceeded. Please wait a few seconds and try again.');
       }
-      throw new Error(`API error: ${response.status}`);
+      throw new Error(errorMsg);
     }
 
     const data = await response.json();
-    const resultText = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
     
-    const jsonMatch = resultText.match(/```json\n([\s\S]*?)\n```/) || [null, resultText];
+    // Find the text part (skip any thinking parts)
+    const parts = data.candidates?.[0]?.content?.parts || [];
+    let resultText = '';
+    for (const part of parts) {
+      if (part.text) {
+        resultText = part.text;
+      }
+    }
+
+    if (!resultText) {
+      throw new Error('No text response received from AI');
+    }
+    
+    // Try multiple JSON extraction strategies
     let parsedResult;
-    try {
-      parsedResult = JSON.parse(jsonMatch[1] || resultText);
-    } catch (e) {
-      console.error('Failed to parse batch JSON', e);
-      throw e;
+    
+    // Strategy 1: Extract from ```json code fence
+    const jsonFenceMatch = resultText.match(/```json\s*([\s\S]*?)\s*```/);
+    if (jsonFenceMatch) {
+      try { parsedResult = JSON.parse(jsonFenceMatch[1]); } catch (e) { /* try next */ }
+    }
+    
+    // Strategy 2: Extract from generic ``` code fence
+    if (!parsedResult) {
+      const fenceMatch = resultText.match(/```\s*([\s\S]*?)\s*```/);
+      if (fenceMatch) {
+        try { parsedResult = JSON.parse(fenceMatch[1]); } catch (e) { /* try next */ }
+      }
+    }
+    
+    // Strategy 3: Find first { to last } and parse directly
+    if (!parsedResult) {
+      const firstBrace = resultText.indexOf('{');
+      const lastBrace = resultText.lastIndexOf('}');
+      if (firstBrace !== -1 && lastBrace > firstBrace) {
+        try { parsedResult = JSON.parse(resultText.substring(firstBrace, lastBrace + 1)); } catch (e) { /* try next */ }
+      }
+    }
+    
+    // Strategy 4: Try parsing the whole text
+    if (!parsedResult) {
+      try { parsedResult = JSON.parse(resultText.trim()); } catch (e) { /* give up */ }
+    }
+
+    if (!parsedResult) {
+      console.error('Failed to parse batch JSON. Raw text:', resultText);
+      throw new Error('Failed to parse AI response. Please try again.');
     }
 
     return parsedResult;
