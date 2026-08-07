@@ -440,12 +440,12 @@ export default function ComplaintListPage() {
               className="bg-[#090909] border border-[#2a2a2a] rounded-[10px] px-3 py-2 text-sm focus:outline-none focus:border-[#E11D48] text-white"
             >
               <option value="All">All Categories</option>
-              <option value="Billing">Billing</option>
-              <option value="Technical">Technical</option>
-              <option value="Service">Service</option>
-              <option value="Account">Account</option>
-              <option value="Security">Security</option>
-              <option value="Other">Other</option>
+              <option value="delivery">Delivery</option>
+              <option value="refund">Refund</option>
+              <option value="product_related">Product Related</option>
+              <option value="service">Service</option>
+              <option value="account">Account</option>
+              <option value="other">Other</option>
             </select>
 
             <button
@@ -814,11 +814,11 @@ export default function ComplaintListPage() {
                         className="w-full bg-[#090909] border border-[#2a2a2a] rounded-[10px] p-2.5 text-sm focus:outline-none focus:border-[#E11D48] text-white"
                       >
                         <option value="">Select Category</option>
-                        <option value="billing">Billing</option>
-                        <option value="technical">Technical</option>
+                        <option value="delivery">Delivery</option>
+                        <option value="refund">Refund</option>
+                        <option value="product_related">Product Related</option>
                         <option value="service">Service</option>
                         <option value="account">Account</option>
-                        <option value="security">Security</option>
                         <option value="other">Other</option>
                       </select>
                       {errors.category && <p className="text-[#E11D48] text-xs mt-1">{errors.category.message}</p>}

@@ -97,7 +97,7 @@ function getMockAnalysis(text: string): Partial<AIAnalysis> {
     sentiment: isAngry ? SentimentType.VeryNegative : SentimentType.Negative,
     sentiment_score: isAngry ? 0.1 : 0.3,
     predicted_priority: isAngry ? ComplaintPriority.High : ComplaintPriority.Medium,
-    predicted_category: ComplaintCategory.Technical,
+    predicted_category: ComplaintCategory.Other,
     predicted_department: 'Technical Support',
     suggested_reply: 'We apologize for the inconvenience. Our team is working on resolving your issue as soon as possible.',
     root_cause: 'System timeout during processing',

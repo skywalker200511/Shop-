@@ -25,11 +25,11 @@ export const ComplaintPriority = {
 export type ComplaintPriority = typeof ComplaintPriority[keyof typeof ComplaintPriority];
 
 export const ComplaintCategory = {
-  Billing: 'billing',
-  Technical: 'technical',
+  Delivery: 'delivery',
+  Refund: 'refund',
+  Product: 'product_related',
   Service: 'service',
   Account: 'account',
-  Security: 'security',
   Other: 'other'
 } as const;
 export type ComplaintCategory = typeof ComplaintCategory[keyof typeof ComplaintCategory];
