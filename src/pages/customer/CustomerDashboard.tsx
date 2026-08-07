@@ -8,7 +8,7 @@ import { PriorityBadge } from '@/components/shared/PriorityBadge';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabaseService } from '@/services/supabaseService';
-import type { Complaint } from '@/types';
+import type { Complaint, Comment } from '@/types';
 import { ComplaintStatus } from '@/types';
 import { formatDate, cn } from '@/lib/utils';
 import { toast } from 'sonner';
@@ -21,6 +21,9 @@ export default function CustomerDashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [commentText, setCommentText] = useState('');
+  const [activeComments, setActiveComments] = useState<Comment[]>([]);
+  const [isCommentsLoading, setIsCommentsLoading] = useState(false);
+  const [isSendingComment, setIsSendingComment] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -46,15 +49,39 @@ export default function CustomerDashboard() {
     fetchData();
   }, [user]);
 
-  const toggleExpand = (id: string) => {
-    setExpandedId(expandedId === id ? null : id);
+  const toggleExpand = async (id: string) => {
+    if (expandedId === id) {
+      setExpandedId(null);
+      return;
+    }
+    setExpandedId(id);
+    setIsCommentsLoading(true);
+    try {
+      const fetchedComments = await supabaseService.getComments(id);
+      setActiveComments(fetchedComments);
+    } catch (error) {
+      console.error(error);
+      toast.error('Failed to load messages');
+    } finally {
+      setIsCommentsLoading(false);
+    }
   };
 
-  const handleAddComment = (e: React.FormEvent) => {
+  const handleAddComment = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!commentText.trim()) return;
-    toast.success('Comment added successfully');
-    setCommentText('');
+    if (!commentText.trim() || !user || !expandedId) return;
+    setIsSendingComment(true);
+    try {
+      const newComment = await supabaseService.addComment(expandedId, user.id, commentText, false);
+      setActiveComments(prev => [...prev, newComment]);
+      toast.success('Message sent!');
+      setCommentText('');
+    } catch (error) {
+      console.error(error);
+      toast.error('Failed to send message');
+    } finally {
+      setIsSendingComment(false);
+    }
   };
 
   const stats = [
@@ -221,22 +248,55 @@ export default function CustomerDashboard() {
                           </div>
                         </div>
 
-                        {/* Add Comment */}
+                        {/* Message Thread */}
                         <div className="pt-6 border-t border-[#e0e0da]">
+                          <h4 className="text-sm font-medium text-[#4a4a4a] mb-4 uppercase font-jetbrains">Messages</h4>
+                          {isCommentsLoading ? (
+                            <div className="animate-pulse space-y-3">
+                              <div className="h-10 bg-gray-200 rounded w-3/4"></div>
+                              <div className="h-10 bg-gray-200 rounded w-1/2 ml-auto"></div>
+                            </div>
+                          ) : activeComments.filter(c => !c.is_internal).length === 0 ? (
+                            <p className="text-sm text-[#737370] italic mb-4">No messages yet.</p>
+                          ) : (
+                            <div className="space-y-4 mb-6 max-h-60 overflow-y-auto pr-2">
+                              {activeComments.filter(c => !c.is_internal).map((comment) => {
+                                const isOwn = comment.user_id === user?.id;
+                                return (
+                                  <div key={comment.id} className={cn("flex flex-col", isOwn ? "items-end" : "items-start")}>
+                                    <div className={cn(
+                                      "px-4 py-2 rounded-2xl max-w-[80%] text-sm",
+                                      isOwn ? "bg-[#3B82F6] text-white rounded-br-none" : "bg-white border border-[#e0e0da] text-[#0a0a0a] rounded-bl-none"
+                                    )}>
+                                      {comment.content}
+                                    </div>
+                                    <span className="text-xs text-[#737370] mt-1">
+                                      {isOwn ? 'You' : comment.user?.full_name || 'Support'} • {new Date(comment.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                    </span>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Add Comment */}
+                        <div className="pt-4 border-t border-[#e0e0da]">
                           <form onSubmit={handleAddComment} className="flex flex-col sm:flex-row gap-3">
                             <input
                               type="text"
                               value={commentText}
                               onChange={(e) => setCommentText(e.target.value)}
                               placeholder="Add a comment or ask for an update..."
-                              className="flex-1 bg-white border border-[#e0e0da] rounded-[10px] p-3 text-sm text-[#0a0a0a] focus:border-[#3B82F6] focus:ring-1 focus:ring-[#3B82F6] outline-none transition-all"
+                              disabled={isSendingComment}
+                              className="flex-1 bg-white border border-[#e0e0da] rounded-[10px] p-3 text-sm text-[#0a0a0a] focus:border-[#3B82F6] focus:ring-1 focus:ring-[#3B82F6] outline-none transition-all disabled:opacity-50"
                             />
                             <button
                               type="submit"
-                              disabled={!commentText.trim()}
-                              className="bg-[#3B82F6] hover:bg-blue-600 disabled:opacity-50 text-[#0a0a0a] px-6 py-3 rounded-[10px] font-medium text-sm flex items-center justify-center gap-2 transition-colors"
+                              disabled={!commentText.trim() || isSendingComment}
+                              className="bg-[#3B82F6] hover:bg-blue-600 disabled:opacity-50 text-white px-6 py-3 rounded-[10px] font-medium text-sm flex items-center justify-center gap-2 transition-colors"
                             >
-                              <MessageSquare className="w-4 h-4" /> Send
+                              <MessageSquare className="w-4 h-4" /> {isSendingComment ? 'Sending...' : 'Send'}
                             </button>
                           </form>
                         </div>

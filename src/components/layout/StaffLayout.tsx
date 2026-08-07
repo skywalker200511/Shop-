@@ -8,12 +8,12 @@ export function StaffLayout() {
   const { isCollapsed } = useSidebar();
 
   return (
-    <div className="min-h-screen bg-[#f5f5f0] flex">
+    <div className="min-h-screen bg-[#f5f5f0]">
       <Sidebar />
       <div
         className={cn(
-          'flex-1 flex flex-col min-h-screen transition-all duration-300',
-          isCollapsed ? 'md:ml-[72px]' : 'md:ml-[260px]',
+          'flex flex-col min-h-screen transition-all duration-300 w-full',
+          isCollapsed ? 'md:ml-[72px] md:w-[calc(100%-72px)]' : 'md:ml-[260px] md:w-[calc(100%-260px)]',
         )}
       >
         <TopNav />

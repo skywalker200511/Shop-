@@ -3,6 +3,8 @@ import { Search, Sparkles, Bell, Menu, LogOut, User } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSidebar } from '@/contexts/SidebarContext';
+import { supabaseService } from '@/services/supabaseService';
+import type { Notification } from '@/types';
 import { cn } from '@/lib/utils';
 
 export function TopNav() {
@@ -10,18 +12,39 @@ export function TopNav() {
   const { toggleMobile } = useSidebar();
   const navigate = useNavigate();
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const notifRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setShowDropdown(false);
       }
+      if (notifRef.current && !notifRef.current.contains(event.target as Node)) {
+        setShowNotifications(false);
+      }
     }
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      supabaseService.getNotifications(user.id).then(setNotifications).catch(console.error);
+    }
+  }, [user]);
+
+  const handleMarkAsRead = async (id: string) => {
+    try {
+      await supabaseService.markNotificationAsRead(id);
+      setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   const handleLogout = () => {
     logout();
@@ -33,6 +56,8 @@ export function TopNav() {
     .map((n) => n[0])
     .join('')
     .toUpperCase() || 'U';
+
+  const unreadCount = notifications.filter(n => !n.read).length;
 
   return (
     <header className="sticky top-0 w-full z-30 flex justify-between items-center px-4 md:px-6 h-16 bg-white/80 backdrop-blur-md border-b border-[#e0e0da]">
@@ -74,10 +99,46 @@ export function TopNav() {
         </button>
 
         {/* Notifications */}
-        <button className="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-[#f5f5f0] transition-colors relative text-[#737370] hover:text-[#0a0a0a]">
-          <Bell className="w-5 h-5" />
-          <span className="absolute top-2 right-2 w-2 h-2 bg-[#e11d48] rounded-full animate-pulse" />
-        </button>
+        <div className="relative" ref={notifRef}>
+          <button 
+            onClick={() => setShowNotifications(!showNotifications)}
+            className="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-[#f5f5f0] transition-colors relative text-[#737370] hover:text-[#0a0a0a]"
+          >
+            <Bell className="w-5 h-5" />
+            {unreadCount > 0 && (
+              <span className="absolute top-2 right-2 w-2 h-2 bg-[#e11d48] rounded-full animate-pulse" />
+            )}
+          </button>
+          
+          {showNotifications && (
+            <div className="absolute right-0 top-12 w-80 bg-white border border-[#e0e0da] rounded-2xl shadow-xl overflow-hidden z-50 flex flex-col max-h-96">
+              <div className="px-4 py-3 border-b border-[#e0e0da] bg-[#fafaf7] flex justify-between items-center">
+                <span className="text-sm font-semibold text-[#0a0a0a]">Notifications</span>
+                {unreadCount > 0 && <span className="text-xs text-[#e11d48] font-medium">{unreadCount} unread</span>}
+              </div>
+              <div className="overflow-y-auto flex-1">
+                {notifications.length === 0 ? (
+                  <div className="p-4 text-center text-sm text-[#737370] italic">No notifications</div>
+                ) : (
+                  notifications.map(n => (
+                    <div 
+                      key={n.id} 
+                      onClick={() => { if (!n.read) handleMarkAsRead(n.id); }}
+                      className={cn("p-4 border-b border-[#f0f0eb] hover:bg-[#f5f5f0] cursor-pointer transition-colors", !n.read && "bg-red-50/50")}
+                    >
+                      <div className="flex justify-between items-start mb-1">
+                        <span className={cn("text-sm font-medium", !n.read ? "text-[#e11d48]" : "text-[#0a0a0a]")}>{n.title}</span>
+                        {!n.read && <span className="w-2 h-2 rounded-full bg-[#e11d48] mt-1.5 flex-shrink-0" />}
+                      </div>
+                      <p className="text-xs text-[#555550]">{n.message}</p>
+                      <p className="text-[10px] text-[#a0a09a] mt-2 font-mono">{new Date(n.created_at).toLocaleString()}</p>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          )}
+        </div>
 
         {/* User avatar + dropdown */}
         <div className="relative" ref={dropdownRef}>

@@ -1,5 +1,5 @@
 import { supabase } from '@/lib/supabase';
-import type { Complaint, Customer, Department, Employee, AIAnalysis } from '@/types';
+import type { Complaint, Customer, Department, Employee, AIAnalysis, Comment } from '@/types';
 
 export const supabaseService = {
   // Complaints
@@ -224,5 +224,53 @@ export const supabaseService = {
   
   async analyzeComplaintAI(text: string) {
     return null; // Implemented in actual component or edge function
+  },
+
+  // Comments / Messaging
+  async getComments(complaintId: string): Promise<(Comment & { user?: any })[]> {
+    const { data, error } = await supabase
+      .from('comments')
+      .select('*, user:users(id, full_name, email, role, avatar_url)')
+      .eq('complaint_id', complaintId)
+      .order('created_at', { ascending: true });
+      
+    if (error) throw error;
+    return data;
+  },
+
+  async addComment(complaintId: string, userId: string, content: string, isInternal: boolean = false): Promise<Comment> {
+    const { data, error } = await supabase
+      .from('comments')
+      .insert({
+        complaint_id: complaintId,
+        user_id: userId,
+        content: content,
+        is_internal: isInternal
+      })
+      .select('*, user:users(id, full_name, email, role, avatar_url)')
+      .single();
+      
+    if (error) throw error;
+    return data;
+  },
+
+  // Notifications
+  async getNotifications(userId: string) {
+    const { data, error } = await supabase
+      .from('notifications')
+      .select('*')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false });
+    
+    if (error) throw error;
+    return data;
+  },
+
+  async markNotificationAsRead(id: string) {
+    const { error } = await supabase
+      .from('notifications')
+      .update({ read: true })
+      .eq('id', id);
+    if (error) throw error;
   }
 };

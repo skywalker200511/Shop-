@@ -147,6 +147,7 @@ export interface Comment {
   id: string;
   complaint_id: string;
   user_id: string;
+  user?: User;
   content: string;
   is_internal: boolean;
   created_at: string;

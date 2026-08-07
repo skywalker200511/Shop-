@@ -24,7 +24,7 @@ import {
   FileText
 } from 'lucide-react';
 
-import type { Complaint } from '@/types';
+import type { Complaint, Comment } from '@/types';
 import { ComplaintPriority, ComplaintStatus, ComplaintCategory } from '@/types';
 import { supabaseService } from '@/services/supabaseService';
 import { GlassCard } from '@/components/shared/GlassCard';
@@ -45,8 +45,15 @@ const newComplaintSchema = z.object({
 });
 
 export default function ComplaintListPage() {
+  const { user } = useAuth();
   const [data, setData] = useState<Complaint[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  
+  // Comments state
+  const [activeComments, setActiveComments] = useState<Comment[]>([]);
+  const [isCommentsLoading, setIsCommentsLoading] = useState(false);
+  const [messageText, setMessageText] = useState('');
+  const [isSendingMessage, setIsSendingMessage] = useState(false);
 
   // Filtering state
   const [globalFilter, setGlobalFilter] = useState('');
@@ -80,8 +87,36 @@ export default function ComplaintListPage() {
 
   // Slide-over & Modal
   const [selectedComplaint, setSelectedComplaint] = useState<Complaint | null>(null);
-  const [noteText, setNoteText] = useState('');
   const [isUpdating, setIsUpdating] = useState(false);
+
+  useEffect(() => {
+    if (selectedComplaint) {
+      setIsCommentsLoading(true);
+      supabaseService.getComments(selectedComplaint.id)
+        .then(setActiveComments)
+        .catch(console.error)
+        .finally(() => setIsCommentsLoading(false));
+    } else {
+      setActiveComments([]);
+      setMessageText('');
+    }
+  }, [selectedComplaint]);
+
+  const handleSendMessage = async (isInternal: boolean) => {
+    if (!selectedComplaint || !user || !messageText.trim()) return;
+    setIsSendingMessage(true);
+    try {
+      const newComment = await supabaseService.addComment(selectedComplaint.id, user.id, messageText, isInternal);
+      setActiveComments(prev => [...prev, newComment]);
+      setMessageText('');
+      toast.success(isInternal ? 'Internal note added' : 'Message sent to customer');
+    } catch (error) {
+      console.error(error);
+      toast.error('Failed to send message');
+    } finally {
+      setIsSendingMessage(false);
+    }
+  };
 
   const handleStatusChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     if (!selectedComplaint) return;
@@ -90,33 +125,17 @@ export default function ComplaintListPage() {
 
     setIsUpdating(true);
     try {
-      await supabaseService.updateComplaint(selectedComplaint.id, { status: newStatus });
-      setSelectedComplaint({ ...selectedComplaint, status: newStatus });
-      setData(data.map(c => c.id === selectedComplaint.id ? { ...c, status: newStatus } : c));
+      const updates: any = { status: newStatus };
+      if (newStatus === 'closed') {
+        updates.closed_at = new Date().toISOString();
+      }
+      await supabaseService.updateComplaint(selectedComplaint.id, updates);
+      setSelectedComplaint({ ...selectedComplaint, ...updates });
+      setData(data.map(c => c.id === selectedComplaint.id ? { ...c, ...updates } : c));
       toast.success('Status updated');
-    } catch (error) {
-      toast.error('Failed to update status');
-    } finally {
-      setIsUpdating(false);
-    }
-  };
-
-  const handleAddNote = async () => {
-    if (!selectedComplaint || !noteText.trim()) return;
-    
-    setIsUpdating(true);
-    try {
-      const newNotes = selectedComplaint.resolution_notes 
-        ? `${selectedComplaint.resolution_notes}\n\n[${formatDate(new Date().toISOString())}]: ${noteText}`
-        : `[${formatDate(new Date().toISOString())}]: ${noteText}`;
-        
-      await supabaseService.updateComplaint(selectedComplaint.id, { resolution_notes: newNotes });
-      setSelectedComplaint({ ...selectedComplaint, resolution_notes: newNotes });
-      setData(data.map(c => c.id === selectedComplaint.id ? { ...c, resolution_notes: newNotes } : c));
-      setNoteText('');
-      toast.success('Note added');
-    } catch (error) {
-      toast.error('Failed to add note');
+    } catch (error: any) {
+      console.error(error);
+      toast.error(`Failed to update status: ${error?.message || 'Unknown error'}`);
     } finally {
       setIsUpdating(false);
     }
@@ -288,7 +307,7 @@ export default function ComplaintListPage() {
   };
 
   return (
-    <div className="p-6 max-w-[1600px] mx-auto min-h-screen bg-[#090909] text-white font-inter">
+    <div className="p-6 w-full min-w-0 max-w-[1600px] mx-auto min-h-screen bg-[#090909] text-white font-inter">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Complaints</h1>
         <button
@@ -555,26 +574,66 @@ export default function ComplaintListPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">Internal Notes</h3>
-                  <div className="space-y-4">
-                    {selectedComplaint.resolution_notes && (
-                      <div className="bg-[#1f1f1f] border border-[#2a2a2a] rounded-[10px] p-4 text-sm text-gray-300 whitespace-pre-wrap">
-                        {selectedComplaint.resolution_notes}
+                  <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">Messages & Notes</h3>
+                  <div className="bg-[#121212] rounded-[10px] border border-[#2a2a2a] overflow-hidden flex flex-col h-[400px]">
+                    <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                      {isCommentsLoading ? (
+                        <div className="animate-pulse flex space-x-4">
+                          <div className="flex-1 space-y-4 py-1">
+                            <div className="h-4 bg-[#2a2a2a] rounded w-3/4"></div>
+                            <div className="h-4 bg-[#2a2a2a] rounded w-1/2"></div>
+                          </div>
+                        </div>
+                      ) : activeComments.length === 0 ? (
+                        <div className="text-sm text-gray-500 text-center py-4 italic">No messages or notes yet.</div>
+                      ) : (
+                        activeComments.map(comment => {
+                          const isCustomer = comment.user?.role === 'customer';
+                          return (
+                            <div key={comment.id} className={cn("flex flex-col", isCustomer ? "items-start" : "items-end")}>
+                              <div className={cn(
+                                "px-4 py-2 max-w-[85%] text-sm rounded-2xl",
+                                isCustomer 
+                                  ? "bg-[#1f1f1f] text-white rounded-bl-none border border-[#2a2a2a]" 
+                                  : comment.is_internal 
+                                    ? "bg-amber-500/20 text-amber-200 rounded-br-none border border-amber-500/30"
+                                    : "bg-[#3B82F6] text-white rounded-br-none"
+                              )}>
+                                {comment.is_internal && <div className="text-[10px] uppercase font-bold text-amber-500 mb-1">Internal Note</div>}
+                                {comment.content}
+                              </div>
+                              <span className="text-xs text-gray-500 mt-1">
+                                {comment.user?.full_name || 'User'} • {new Date(comment.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                              </span>
+                            </div>
+                          );
+                        })
+                      )}
+                    </div>
+                    <div className="p-3 border-t border-[#2a2a2a] bg-[#090909]">
+                      <textarea 
+                        placeholder="Type a message or internal note..." 
+                        value={messageText}
+                        onChange={(e) => setMessageText(e.target.value)}
+                        className="w-full bg-[#171717] border border-[#2a2a2a] rounded-[10px] p-3 text-sm focus:outline-none focus:border-[#E11D48] text-white min-h-[80px] resize-none mb-3"
+                      />
+                      <div className="flex gap-2 justify-end">
+                        <button 
+                          onClick={() => handleSendMessage(true)}
+                          disabled={isSendingMessage || !messageText.trim()}
+                          className="bg-[#1f1f1f] border border-[#2a2a2a] hover:bg-[#2a2a2a] disabled:opacity-50 text-white px-4 py-2 rounded-[10px] text-sm transition-colors"
+                        >
+                          Add Internal Note
+                        </button>
+                        <button 
+                          onClick={() => handleSendMessage(false)}
+                          disabled={isSendingMessage || !messageText.trim()}
+                          className="bg-[#3B82F6] hover:bg-blue-600 disabled:opacity-50 text-white px-4 py-2 rounded-[10px] text-sm font-medium transition-colors"
+                        >
+                          Send to Customer
+                        </button>
                       </div>
-                    )}
-                    <textarea 
-                      placeholder="Add a new note..." 
-                      value={noteText}
-                      onChange={(e) => setNoteText(e.target.value)}
-                      className="w-full bg-[#121212] border border-[#2a2a2a] rounded-[10px] p-3 text-sm focus:outline-none focus:border-[#E11D48] text-white min-h-[100px]"
-                    />
-                    <button 
-                      onClick={handleAddNote}
-                      disabled={isUpdating || !noteText.trim()}
-                      className="bg-[#1f1f1f] border border-[#2a2a2a] hover:bg-[#2a2a2a] disabled:opacity-50 text-white px-4 py-2 rounded-[10px] text-sm transition-colors"
-                    >
-                      {isUpdating ? 'Saving...' : 'Add Note'}
-                    </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -592,14 +651,6 @@ export default function ComplaintListPage() {
                   <option value="resolved">Resolved</option>
                   <option value="closed">Closed</option>
                 </select>
-                <button 
-                  onClick={() => {
-                    toast.success('Message feature coming soon!');
-                  }}
-                  className="bg-[#E11D48] hover:bg-[#E11D48]/90 text-white px-4 py-2 rounded-[10px] text-sm font-medium transition-colors"
-                >
-                  Respond to Customer
-                </button>
               </div>
             </motion.div>
           </>
