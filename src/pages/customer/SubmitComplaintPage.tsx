@@ -66,7 +66,7 @@ export default function SubmitComplaintPage() {
       }
     };
 
-    const timeoutId = setTimeout(analyzeText, 1000);
+    const timeoutId = setTimeout(analyzeText, 5000);
     return () => clearTimeout(timeoutId);
   }, [description]);
 
