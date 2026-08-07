@@ -265,7 +265,7 @@ export default function AIAnalysisPage() {
                 className="space-y-6"
               >
                 <div className="flex justify-between items-center">
-                  <h2 className="text-2xl font-bold text-white font-inter">Executive Summary</h2>
+                  <h2 className="text-2xl font-bold text-[#0a0a0a] font-inter">Executive Summary</h2>
                   <div className="flex gap-2">
                     <button onClick={handleClear} className="p-2 text-gray-400 hover:text-white transition-colors bg-[#121212] rounded-lg border border-[#2a2a2a]">
                       <RefreshCcw size={18} />
@@ -279,41 +279,41 @@ export default function AIAnalysisPage() {
                 <GlassCard className="p-6 border-l-4 border-l-[#E11D48]">
                   <div className="flex items-center gap-2 mb-3">
                     <Sparkles className="w-5 h-5 text-[#E11D48]" />
-                    <h3 className="text-lg font-bold text-white">Overview</h3>
+                    <h3 className="text-lg font-bold text-[#0a0a0a]">Overview</h3>
                   </div>
-                  <p className="text-gray-300 leading-relaxed text-sm">{batchResults.executive_summary}</p>
+                  <p className="text-[#4a4a4a] leading-relaxed text-sm">{batchResults.executive_summary}</p>
                 </GlassCard>
 
-                <h3 className="text-lg font-bold text-white mt-6 mb-4">Top Recurring Issues</h3>
+                <h3 className="text-lg font-bold text-[#0a0a0a] mt-6 mb-4">Top Recurring Issues</h3>
                 <div className="grid grid-cols-1 gap-4">
                   {batchResults.recurring_issues?.map((issue: any, idx: number) => (
                     <GlassCard key={idx} className="p-4 flex justify-between items-center">
                       <div className="flex items-center gap-3">
                         <div className={cn("w-2 h-2 rounded-full", issue.severity === 'High' ? 'bg-red-500' : issue.severity === 'Medium' ? 'bg-orange-500' : 'bg-yellow-500')} />
-                        <span className="text-white font-medium">{issue.issue}</span>
+                        <span className="text-[#0a0a0a] font-medium">{issue.issue}</span>
                       </div>
                       <div className="flex items-center gap-3">
-                        <span className="text-xs font-mono text-gray-400 bg-[#121212] px-2 py-1 rounded border border-[#2a2a2a]">{issue.count} occurrences</span>
+                        <span className="text-xs font-mono text-gray-600 bg-[#f5f5f0] px-2 py-1 rounded border border-[#e0e0da]">{issue.count} occurrences</span>
                       </div>
                     </GlassCard>
                   ))}
                 </div>
 
-                <h3 className="text-lg font-bold text-white mt-6 mb-4">Critical Cases Requiring Action</h3>
+                <h3 className="text-lg font-bold text-[#0a0a0a] mt-6 mb-4">Critical Cases Requiring Action</h3>
                 <div className="space-y-4">
                   {batchResults.critical_cases?.map((caseItem: any, idx: number) => (
-                    <GlassCard key={idx} className="p-5 border border-red-500/30 bg-red-500/5">
+                    <GlassCard key={idx} className="p-5 border border-red-500/30 bg-red-50">
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex items-center gap-2">
-                          <User size={16} className="text-red-400" />
-                          <span className="font-bold text-white">{caseItem.user_name}</span>
+                          <User size={16} className="text-[#e11d48]" />
+                          <span className="font-bold text-[#0a0a0a]">{caseItem.user_name}</span>
                         </div>
                         <AiBadge />
                       </div>
-                      <p className="text-sm text-gray-300 mb-3">{caseItem.issue}</p>
-                      <div className="bg-[#121212] p-3 rounded-lg border border-[#2a2a2a]">
-                        <span className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1 block">Recommended Action</span>
-                        <p className="text-sm text-[#74D8BD]">{caseItem.recommendation}</p>
+                      <p className="text-sm text-[#4a4a4a] mb-3">{caseItem.issue}</p>
+                      <div className="bg-[#f5f5f0] p-3 rounded-lg border border-[#e0e0da]">
+                        <span className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 block">Recommended Action</span>
+                        <p className="text-sm text-[#059669]">{caseItem.recommendation}</p>
                       </div>
                     </GlassCard>
                   ))}
