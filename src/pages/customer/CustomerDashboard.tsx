@@ -84,7 +84,7 @@ export default function CustomerDashboard() {
           <motion.h1 
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-3xl font-bold text-white font-inter"
+            className="text-3xl font-bold text-[#0a0a0a] font-inter"
           >
             Welcome back, {user?.full_name || 'Customer'}
           </motion.h1>
@@ -92,7 +92,7 @@ export default function CustomerDashboard() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.1 }}
-            className="text-gray-400 mt-2 font-inter"
+            className="text-[#4a4a4a] mt-2 font-inter"
           >
             Track and manage your support requests
           </motion.p>
@@ -101,7 +101,7 @@ export default function CustomerDashboard() {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           onClick={() => navigate('/customer/submit')}
-          className="bg-[#E11D48] hover:bg-rose-700 text-white px-6 py-3 rounded-[10px] font-medium flex items-center gap-2 transition-all shadow-[0_0_15px_rgba(225,29,72,0.3)] hover:shadow-[0_0_25px_rgba(225,29,72,0.5)]"
+          className="bg-[#E11D48] hover:bg-rose-700 text-[#0a0a0a] px-6 py-3 rounded-[10px] font-medium flex items-center gap-2 transition-all shadow-[0_0_15px_rgba(225,29,72,0.3)] hover:shadow-[0_0_25px_rgba(225,29,72,0.5)]"
         >
           <Plus className="w-5 h-5" /> New Complaint
         </motion.button>
@@ -117,12 +117,12 @@ export default function CustomerDashboard() {
             transition={{ delay: idx * 0.1 }}
           >
             <GlassCard className="p-6 flex items-center gap-4 border-l-4" style={{ borderLeftColor: stat.color.replace('text-[', '').replace(']', '') }}>
-              <div className={cn("p-3 rounded-full bg-[#121212]", stat.color)}>
+              <div className={cn("p-3 rounded-full bg-white", stat.color)}>
                 <stat.icon className="w-6 h-6" />
               </div>
               <div>
-                <p className="text-gray-400 text-sm font-inter">{stat.label}</p>
-                <p className="text-2xl font-bold text-white font-jetbrains">{stat.value}</p>
+                <p className="text-[#4a4a4a] text-sm font-inter">{stat.label}</p>
+                <p className="text-2xl font-bold text-[#0a0a0a] font-jetbrains">{stat.value}</p>
               </div>
             </GlassCard>
           </motion.div>
@@ -131,12 +131,12 @@ export default function CustomerDashboard() {
 
       {/* Complaints List */}
       <div className="mt-8">
-        <h2 className="text-xl font-bold text-white mb-4 font-inter">My Complaints</h2>
+        <h2 className="text-xl font-bold text-[#0a0a0a] mb-4 font-inter">My Complaints</h2>
         
         {isLoading ? (
           <div className="space-y-4">
             {[1, 2, 3].map(i => (
-              <GlassCard key={i} className="h-16 animate-pulse bg-[#171717]/50" />
+              <GlassCard key={i} className="h-16 animate-pulse bg-white/50" />
             ))}
           </div>
         ) : complaints.length === 0 ? (
@@ -147,7 +147,7 @@ export default function CustomerDashboard() {
             action={
               <button 
                 onClick={() => navigate('/customer/submit')}
-                className="bg-[#E11D48] hover:bg-rose-700 text-white px-4 py-2 rounded-[10px] font-medium"
+                className="bg-[#E11D48] hover:bg-rose-700 text-[#0a0a0a] px-4 py-2 rounded-[10px] font-medium"
               >
                 Submit Complaint
               </button>
@@ -159,18 +159,18 @@ export default function CustomerDashboard() {
               <GlassCard key={complaint.id} className="overflow-hidden transition-all duration-300">
                 <div 
                   onClick={() => toggleExpand(complaint.id)}
-                  className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 cursor-pointer hover:bg-[#1f1f1f]/50 transition-colors"
+                  className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 cursor-pointer hover:bg-[#f5f5f0] transition-colors"
                 >
                   <div className="flex items-center gap-4 flex-1">
-                    <span className="text-gray-400 font-jetbrains text-sm">{complaint.complaint_number}</span>
-                    <h3 className="text-white font-medium truncate max-w-[200px] sm:max-w-[300px]">{complaint.title}</h3>
+                    <span className="text-[#4a4a4a] font-jetbrains text-sm">{complaint.complaint_number}</span>
+                    <h3 className="text-[#0a0a0a] font-medium truncate max-w-[200px] sm:max-w-[300px]">{complaint.title}</h3>
                   </div>
                   
                   <div className="flex items-center gap-4">
                     <StatusBadge status={complaint.status} />
                     <PriorityBadge priority={complaint.priority} />
-                    <span className="text-gray-500 text-sm hidden sm:inline-block font-inter">{formatDate(complaint.updated_at)}</span>
-                    <button className="text-gray-400 hover:text-white p-1">
+                    <span className="text-[#737370] text-sm hidden sm:inline-block font-inter">{formatDate(complaint.updated_at)}</span>
+                    <button className="text-[#4a4a4a] hover:text-[#0a0a0a] p-1">
                       {expandedId === complaint.id ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
                     </button>
                   </div>
@@ -182,21 +182,21 @@ export default function CustomerDashboard() {
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: 'auto', opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
-                      className="border-t border-[#2a2a2a] bg-[#121212]/50"
+                      className="border-t border-[#e0e0da] bg-white/50"
                     >
                       <div className="p-5 sm:p-6 space-y-8">
                         
                         {/* Description */}
                         <div>
-                          <h4 className="text-sm font-medium text-gray-400 mb-2 uppercase font-jetbrains">Description</h4>
-                          <p className="text-gray-300 text-sm leading-relaxed whitespace-pre-wrap">{complaint.description}</p>
+                          <h4 className="text-sm font-medium text-[#4a4a4a] mb-2 uppercase font-jetbrains">Description</h4>
+                          <p className="text-[#4a4a4a] text-sm leading-relaxed whitespace-pre-wrap">{complaint.description}</p>
                         </div>
 
                         {/* Tracker */}
                         <div>
-                          <h4 className="text-sm font-medium text-gray-400 mb-4 uppercase font-jetbrains">Status Tracker</h4>
+                          <h4 className="text-sm font-medium text-[#4a4a4a] mb-4 uppercase font-jetbrains">Status Tracker</h4>
                           <div className="relative flex justify-between items-center max-w-3xl">
-                            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-[#2a2a2a] z-0 rounded-full"></div>
+                            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-[#e0e0da] z-0 rounded-full"></div>
                             
                             {steps.map((step, idx) => {
                               const currentIndex = getStepIndex(complaint.status);
@@ -208,12 +208,12 @@ export default function CustomerDashboard() {
                                   <div className={cn(
                                     "w-4 h-4 rounded-full border-2 transition-colors",
                                     isCompleted ? "bg-[#E11D48] border-[#E11D48]" : 
-                                    isCurrent ? "bg-[#171717] border-[#E11D48] shadow-[0_0_10px_rgba(225,29,72,0.8)] animate-pulse" : 
-                                    "bg-[#171717] border-[#2a2a2a]"
+                                    isCurrent ? "bg-white border-[#E11D48] shadow-[0_0_10px_rgba(225,29,72,0.8)] animate-pulse" : 
+                                    "bg-white border-[#e0e0da]"
                                   )} />
                                   <span className={cn(
                                     "text-xs font-medium font-inter absolute top-6 whitespace-nowrap",
-                                    isCompleted || isCurrent ? "text-gray-300" : "text-gray-600"
+                                    isCompleted || isCurrent ? "text-[#4a4a4a]" : "text-[#737370]"
                                   )}>{step.label}</span>
                                 </div>
                               );
@@ -222,19 +222,19 @@ export default function CustomerDashboard() {
                         </div>
 
                         {/* Add Comment */}
-                        <div className="pt-6 border-t border-[#2a2a2a]">
+                        <div className="pt-6 border-t border-[#e0e0da]">
                           <form onSubmit={handleAddComment} className="flex flex-col sm:flex-row gap-3">
                             <input
                               type="text"
                               value={commentText}
                               onChange={(e) => setCommentText(e.target.value)}
                               placeholder="Add a comment or ask for an update..."
-                              className="flex-1 bg-[#171717] border border-[#2a2a2a] rounded-[10px] p-3 text-sm text-white focus:border-[#3B82F6] focus:ring-1 focus:ring-[#3B82F6] outline-none transition-all"
+                              className="flex-1 bg-white border border-[#e0e0da] rounded-[10px] p-3 text-sm text-[#0a0a0a] focus:border-[#3B82F6] focus:ring-1 focus:ring-[#3B82F6] outline-none transition-all"
                             />
                             <button
                               type="submit"
                               disabled={!commentText.trim()}
-                              className="bg-[#3B82F6] hover:bg-blue-600 disabled:opacity-50 text-white px-6 py-3 rounded-[10px] font-medium text-sm flex items-center justify-center gap-2 transition-colors"
+                              className="bg-[#3B82F6] hover:bg-blue-600 disabled:opacity-50 text-[#0a0a0a] px-6 py-3 rounded-[10px] font-medium text-sm flex items-center justify-center gap-2 transition-colors"
                             >
                               <MessageSquare className="w-4 h-4" /> Send
                             </button>

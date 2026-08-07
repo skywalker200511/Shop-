@@ -112,7 +112,7 @@ export const DashboardPage = () => {
       {/* Page Header */}
       <div>
         <h1 className="text-2xl font-bold text-[#0a0a0a] tracking-tight">Dashboard</h1>
-        <p className="text-sm text-[#737370] mt-1">Welcome back — here's what's happening today.</p>
+        <p className="text-sm text-[#4a4a4a] mt-1">Welcome back — here's what's happening today.</p>
       </div>
 
       {/* Metric Cards Row */}
@@ -136,7 +136,7 @@ export const DashboardPage = () => {
               <div className="text-4xl font-black text-[#0a0a0a] tracking-tight font-mono">
                 <AnimatedCounter end={metrics.total_complaints} />
               </div>
-              <p className="text-sm font-medium text-[#737370] mt-1">Total Complaints</p>
+              <p className="text-sm font-medium text-[#4a4a4a] mt-1">Total Complaints</p>
               <div className="flex items-center gap-1 mt-3 text-[#e11d48]">
                 <TrendingDown size={14} />
                 <span className="text-xs font-mono font-semibold">Trending down 12%</span>
@@ -158,7 +158,7 @@ export const DashboardPage = () => {
             </div>
             <div className="mt-auto">
               <div className="text-4xl font-black text-[#0a0a0a] tracking-tight font-mono">98.4%</div>
-              <p className="text-sm font-medium text-[#737370] mt-1">AI Accuracy</p>
+              <p className="text-sm font-medium text-[#4a4a4a] mt-1">AI Accuracy</p>
               <div className="flex items-center gap-1 mt-3 text-[#16a34a]">
                 <TrendingUp size={14} />
                 <span className="text-xs font-mono font-semibold">Model performing well</span>
@@ -182,7 +182,7 @@ export const DashboardPage = () => {
               <div className="text-4xl font-black text-[#0a0a0a] tracking-tight font-mono">
                 {metrics.avg_resolution_hours.toFixed(1)}h
               </div>
-              <p className="text-sm font-medium text-[#737370] mt-1">Avg Resolution Time</p>
+              <p className="text-sm font-medium text-[#4a4a4a] mt-1">Avg Resolution Time</p>
               <div className="flex items-center gap-1 mt-3 text-[#059669]">
                 <TrendingDown size={14} />
                 <span className="text-xs font-mono font-semibold">1.1h improvement</span>
@@ -207,7 +207,7 @@ export const DashboardPage = () => {
             </div>
             <div className="flex items-center gap-3">
               <div className="flex bg-[#f5f5f0] rounded-xl p-1 border border-[#e0e0da]">
-                <button className="px-3 py-1.5 text-xs font-mono font-semibold text-white bg-[#e11d48] rounded-lg shadow-sm">Weekly</button>
+                <button className="px-3 py-1.5 text-xs font-mono font-semibold text-[#0a0a0a] bg-[#e11d48] rounded-lg shadow-sm">Weekly</button>
                 <button className="px-3 py-1.5 text-xs font-mono text-[#737370] hover:text-[#0a0a0a] transition-colors">Monthly</button>
               </div>
               <button className="text-[#737370] hover:text-[#0a0a0a] transition-colors">
@@ -271,7 +271,7 @@ export const DashboardPage = () => {
                 </div>
                 <h4 className="text-sm text-[#0a0a0a] font-semibold">Enterprise Account Outage</h4>
               </div>
-              <span className="text-[10px] font-mono font-bold px-2 py-0.5 bg-[#e11d48] text-white rounded-full uppercase">Urgent</span>
+              <span className="text-[10px] font-mono font-bold px-2 py-0.5 bg-[#e11d48] text-[#0a0a0a] rounded-full uppercase">Urgent</span>
             </div>
             <p className="text-xs text-[#737370]">Critical service disruption affecting enterprise tier</p>
             <div className="flex items-center gap-1.5 mt-auto pt-2 border-t border-[#f0f0eb]">
@@ -288,7 +288,7 @@ export const DashboardPage = () => {
                 </div>
                 <h4 className="text-sm text-[#0a0a0a] font-semibold">API Rate Limit Exceeded</h4>
               </div>
-              <span className="text-[10px] font-mono font-bold px-2 py-0.5 bg-[#f97316] text-white rounded-full uppercase">High</span>
+              <span className="text-[10px] font-mono font-bold px-2 py-0.5 bg-[#f97316] text-[#0a0a0a] rounded-full uppercase">High</span>
             </div>
             <p className="text-xs text-[#737370]">Multiple endpoints returning 429 errors for users</p>
             <div className="flex items-center gap-1.5 mt-auto pt-2 border-t border-[#f0f0eb]">
@@ -305,7 +305,7 @@ export const DashboardPage = () => {
                 </div>
                 <h4 className="text-sm text-[#0a0a0a] font-semibold">Failed Login Spike</h4>
               </div>
-              <span className="text-[10px] font-mono font-bold px-2 py-0.5 bg-[#8b5cf6] text-white rounded-full uppercase">Security</span>
+              <span className="text-[10px] font-mono font-bold px-2 py-0.5 bg-[#8b5cf6] text-[#0a0a0a] rounded-full uppercase">Security</span>
             </div>
             <p className="text-xs text-[#737370]">Unusual login failure patterns detected in logs</p>
             <div className="flex items-center gap-1.5 mt-auto pt-2 border-t border-[#f0f0eb]">

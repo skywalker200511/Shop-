@@ -128,26 +128,26 @@ export default function SubmitComplaintPage() {
     <div className="container mx-auto p-4 lg:p-8 max-w-3xl">
       <button 
         onClick={() => navigate(-1)} 
-        className="flex items-center gap-2 text-gray-400 hover:text-white mb-6 transition-colors text-sm font-inter"
+        className="flex items-center gap-2 text-[#4a4a4a] hover:text-[#0a0a0a] mb-6 transition-colors text-sm font-inter"
       >
         <ArrowLeft className="w-4 h-4" /> Back to Dashboard
       </button>
 
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-white mb-2 font-inter">Submit a Complaint</h1>
-        <p className="text-gray-400 font-inter">We'll get back to you within 24 hours</p>
+        <h1 className="text-3xl font-bold text-[#0a0a0a] mb-2 font-inter">Submit a Complaint</h1>
+        <p className="text-[#4a4a4a] font-inter">We'll get back to you within 24 hours</p>
       </div>
 
       <GlassCard className="p-6 md:p-8">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2 font-inter">Subject *</label>
+            <label className="block text-sm font-medium text-[#4a4a4a] mb-2 font-inter">Subject *</label>
             <input
               {...register('subject')}
               className={cn(
-                "w-full bg-[#121212] border rounded-[10px] p-3 text-white focus:outline-none transition-colors",
-                errors.subject ? "border-[#E11D48] focus:border-[#E11D48]" : "border-[#2a2a2a] focus:border-[#3B82F6]"
+                "w-full bg-white border rounded-[10px] p-3 text-[#0a0a0a] focus:outline-none transition-colors",
+                errors.subject ? "border-[#E11D48] focus:border-[#E11D48]" : "border-[#e0e0da] focus:border-[#3B82F6]"
               )}
               placeholder="Brief summary of the issue"
             />
@@ -156,12 +156,12 @@ export default function SubmitComplaintPage() {
 
           <div className="grid grid-cols-1 gap-6">
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2 font-inter">Issue Type *</label>
+              <label className="block text-sm font-medium text-[#4a4a4a] mb-2 font-inter">Issue Type *</label>
               <select
                 {...register('category')}
                 className={cn(
-                  "w-full bg-[#121212] border rounded-[10px] p-3 text-white focus:outline-none transition-colors appearance-none",
-                  errors.category ? "border-[#E11D48] focus:border-[#E11D48]" : "border-[#2a2a2a] focus:border-[#3B82F6]"
+                  "w-full bg-white border rounded-[10px] p-3 text-[#0a0a0a] focus:outline-none transition-colors appearance-none",
+                  errors.category ? "border-[#E11D48] focus:border-[#E11D48]" : "border-[#e0e0da] focus:border-[#3B82F6]"
                 )}
               >
                 <option value="">Select issue type</option>
@@ -174,13 +174,13 @@ export default function SubmitComplaintPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2 font-inter">Description *</label>
+            <label className="block text-sm font-medium text-[#4a4a4a] mb-2 font-inter">Description *</label>
             <textarea
               {...register('description')}
               rows={8}
               className={cn(
-                "w-full bg-[#121212] border rounded-[10px] p-4 text-white focus:outline-none transition-colors resize-y",
-                errors.description ? "border-[#E11D48] focus:border-[#E11D48]" : "border-[#2a2a2a] focus:border-[#3B82F6]"
+                "w-full bg-white border rounded-[10px] p-4 text-[#0a0a0a] focus:outline-none transition-colors resize-y",
+                errors.description ? "border-[#E11D48] focus:border-[#E11D48]" : "border-[#e0e0da] focus:border-[#3B82F6]"
               )}
               placeholder="Please provide as much detail as possible..."
             />
@@ -203,8 +203,8 @@ export default function SubmitComplaintPage() {
                       <span className="text-sm font-medium text-[#3B82F6]">AI Suggestion</span>
                       <AiBadge />
                     </div>
-                    <p className="text-xs text-gray-300">
-                      Based on your description, this seems like a <strong className="text-white capitalize">{aiSuggestions.priority}</strong> priority <strong className="text-white capitalize">{aiSuggestions.category}</strong> issue.
+                    <p className="text-xs text-[#4a4a4a]">
+                      Based on your description, this seems like a <strong className="text-[#0a0a0a] capitalize">{aiSuggestions.priority}</strong> priority <strong className="text-[#0a0a0a] capitalize">{aiSuggestions.category}</strong> issue.
                     </p>
                     {aiSuggestions.duplicates && aiSuggestions.duplicates > 0 && (
                       <button type="button" className="text-xs text-[#E11D48] mt-1 hover:underline">
@@ -216,14 +216,14 @@ export default function SubmitComplaintPage() {
                     <button
                       type="button"
                       onClick={() => setAiSuggestions(null)}
-                      className="px-3 py-1.5 text-xs text-gray-400 hover:text-white transition-colors"
+                      className="px-3 py-1.5 text-xs text-[#4a4a4a] hover:text-[#0a0a0a] transition-colors"
                     >
                       Ignore
                     </button>
                     <button
                       type="button"
                       onClick={applySuggestions}
-                      className="px-3 py-1.5 bg-[#3B82F6] hover:bg-blue-600 text-white rounded text-xs transition-colors"
+                      className="px-3 py-1.5 bg-[#3B82F6] hover:bg-blue-600 text-[#0a0a0a] rounded text-xs transition-colors"
                     >
                       Apply Auto-fill
                     </button>
@@ -234,24 +234,24 @@ export default function SubmitComplaintPage() {
           </AnimatePresence>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2 font-inter">Attachments (Optional)</label>
-            <div className="border-2 border-dashed border-[#2a2a2a] rounded-[10px] p-6 flex flex-col items-center justify-center bg-[#121212] hover:bg-[#1a1a1a] transition-colors relative">
+            <label className="block text-sm font-medium text-[#4a4a4a] mb-2 font-inter">Attachments (Optional)</label>
+            <div className="border-2 border-dashed border-[#e0e0da] rounded-[10px] p-6 flex flex-col items-center justify-center bg-white hover:bg-[#f5f5f0] transition-colors relative">
               <input 
                 type="file" 
                 multiple 
                 onChange={handleFileUpload} 
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
               />
-              <Upload className="w-6 h-6 text-gray-400 mb-2" />
-              <p className="text-gray-400 text-sm">Drop files here or click to upload</p>
+              <Upload className="w-6 h-6 text-[#4a4a4a] mb-2" />
+              <p className="text-[#4a4a4a] text-sm">Drop files here or click to upload</p>
             </div>
             
             {uploadedFiles.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-3">
                 {uploadedFiles.map((file, i) => (
-                  <div key={i} className="flex items-center gap-2 bg-[#2a2a2a] px-3 py-1.5 rounded-full text-xs text-gray-300">
+                  <div key={i} className="flex items-center gap-2 bg-[#e0e0da] px-3 py-1.5 rounded-full text-xs text-[#4a4a4a]">
                     <span className="truncate max-w-[150px]">{file.name}</span>
-                    <button type="button" onClick={() => removeFile(i)} className="text-gray-500 hover:text-white">
+                    <button type="button" onClick={() => removeFile(i)} className="text-[#737370] hover:text-[#0a0a0a]">
                       <X className="w-3 h-3" />
                     </button>
                   </div>
@@ -260,11 +260,11 @@ export default function SubmitComplaintPage() {
             )}
           </div>
 
-          <div className="pt-4 border-t border-[#2a2a2a]">
+          <div className="pt-4 border-t border-[#e0e0da]">
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full sm:w-auto bg-[#E11D48] hover:bg-rose-700 disabled:opacity-50 text-white px-8 py-3 rounded-[10px] font-medium flex items-center justify-center gap-2 transition-all shadow-[0_0_15px_rgba(225,29,72,0.3)] hover:shadow-[0_0_25px_rgba(225,29,72,0.5)]"
+              className="w-full sm:w-auto bg-[#E11D48] hover:bg-rose-700 disabled:opacity-50 text-[#0a0a0a] px-8 py-3 rounded-[10px] font-medium flex items-center justify-center gap-2 transition-all shadow-[0_0_15px_rgba(225,29,72,0.3)] hover:shadow-[0_0_25px_rgba(225,29,72,0.5)]"
             >
               {isSubmitting ? (
                 <span className="animate-pulse flex items-center gap-2">
