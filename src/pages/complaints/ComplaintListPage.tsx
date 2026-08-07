@@ -21,7 +21,8 @@ import {
   ChevronLeft,
   ChevronRight,
   ArrowUpDown,
-  FileText
+  FileText,
+  Trash2
 } from 'lucide-react';
 
 import type { Complaint, Comment } from '@/types';
@@ -136,6 +137,24 @@ export default function ComplaintListPage() {
     } catch (error: any) {
       console.error(error);
       toast.error(`Failed to update status: ${error?.message || 'Unknown error'}`);
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!selectedComplaint) return;
+    if (!window.confirm(`Are you sure you want to delete complaint ${selectedComplaint.complaint_number}? This action cannot be undone.`)) return;
+    
+    setIsUpdating(true);
+    try {
+      await supabaseService.deleteComplaint(selectedComplaint.id);
+      setData(data.filter(c => c.id !== selectedComplaint.id));
+      setSelectedComplaint(null);
+      toast.success('Complaint deleted successfully');
+    } catch (error: any) {
+      toast.error(`Failed to delete complaint: ${error?.message || 'Unknown error'}`);
+      console.error(error);
     } finally {
       setIsUpdating(false);
     }
@@ -699,6 +718,16 @@ export default function ComplaintListPage() {
                   <option value="resolved">Resolved</option>
                   <option value="closed">Closed</option>
                 </select>
+                {user?.role === 'admin' && (
+                  <button
+                    onClick={handleDelete}
+                    disabled={isUpdating}
+                    className="bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20 rounded-[10px] px-4 py-2 transition-colors flex items-center justify-center gap-2 text-sm font-medium whitespace-nowrap"
+                    title="Delete Complaint"
+                  >
+                    <Trash2 size={16} /> Delete
+                  </button>
+                )}
               </div>
             </motion.div>
           </>
