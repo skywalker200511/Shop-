@@ -306,6 +306,54 @@ export default function ComplaintListPage() {
     setCategoryFilter('All');
   };
 
+  const exportToPDF = async () => {
+    try {
+      toast.loading("Generating PDF...", { id: "pdf-toast" });
+      const { jsPDF } = await import('jspdf');
+      const { default: autoTable } = await import('jspdf-autotable');
+      const doc = new jsPDF();
+      
+      doc.setFontSize(20);
+      doc.text("Complaints Report", 14, 22);
+      
+      doc.setFontSize(11);
+      doc.setTextColor(100);
+      doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 14, 30);
+      
+      const tableColumn = ["ID", "Title", "Customer", "Category", "Priority", "Status", "Date"];
+      const tableRows: any[] = [];
+      
+      const complaintsToExport = table.getRowModel().rows.map(row => row.original);
+      
+      complaintsToExport.forEach(complaint => {
+        const complaintData = [
+          complaint.complaint_number,
+          complaint.title.length > 30 ? complaint.title.substring(0, 30) + '...' : complaint.title,
+          complaint.customer?.user?.full_name || 'Unknown',
+          complaint.category,
+          complaint.priority,
+          complaint.status,
+          formatDate(complaint.created_at)
+        ];
+        tableRows.push(complaintData);
+      });
+      
+      autoTable(doc, {
+        head: [tableColumn],
+        body: tableRows,
+        startY: 40,
+        theme: 'grid',
+        headStyles: { fillColor: [225, 29, 72] }
+      });
+      
+      doc.save(`complaints_report_${new Date().toISOString().split('T')[0]}.pdf`);
+      toast.success("PDF exported successfully", { id: "pdf-toast" });
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to export PDF", { id: "pdf-toast" });
+    }
+  };
+
   return (
     <div className="p-6 w-full min-w-0 max-w-[1600px] mx-auto min-h-[calc(100vh-2rem)] my-4 bg-[#090909] text-white font-inter rounded-[24px] shadow-2xl">
       <div className="flex justify-between items-center mb-8">
@@ -389,7 +437,7 @@ export default function ComplaintListPage() {
               Export CSV
             </button>
             <button
-              onClick={exportPDF}
+              onClick={exportToPDF}
               className="bg-[#1f1f1f] border border-[#2a2a2a] hover:bg-[#2a2a2a] text-white px-3 py-2 rounded-[10px] flex items-center gap-2 transition-colors text-sm"
             >
               <FileText size={16} />
