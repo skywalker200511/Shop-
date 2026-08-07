@@ -323,9 +323,9 @@ export default function ComplaintListPage() {
       const tableColumn = ["ID", "Title", "Customer", "Category", "Priority", "Status", "Date"];
       const tableRows: any[] = [];
       
-      const complaintsToExport = table.getRowModel().rows.map(row => row.original);
+      const complaintsToExport = table.getRowModel().rows.map((row: any) => row.original);
       
-      complaintsToExport.forEach(complaint => {
+      complaintsToExport.forEach((complaint: any) => {
         const complaintData = [
           complaint.complaint_number,
           complaint.title.length > 30 ? complaint.title.substring(0, 30) + '...' : complaint.title,
