@@ -108,3 +108,77 @@ function getMockAnalysis(text: string): Partial<AIAnalysis> {
     created_at: new Date().toISOString(),
   };
 }
+
+export async function analyzeAllComplaints(complaints: any[]): Promise<any> {
+  if (!GEMINI_API_KEY) {
+    return {
+      executive_summary: "Mock executive summary. Please add your Gemini API key to .env to see real AI analysis.",
+      recurring_issues: [
+        { issue: "System timeouts during checkout", count: 12, severity: "High" },
+        { issue: "Delayed shipping updates", count: 8, severity: "Medium" }
+      ],
+      critical_cases: [
+        { user_name: "Alice Smith", issue: "Multiple billing charges", recommendation: "Immediate refund and account review" }
+      ]
+    };
+  }
+
+  const complaintsText = complaints.map(c => `ID: ${c.id} | User: ${c.customer?.user?.full_name || 'Unknown'} | Status: ${c.status} | Priority: ${c.priority} \nDescription: ${c.description}\n`).join('---\n');
+
+  try {
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${GEMINI_API_KEY}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          contents: [
+            {
+              parts: [
+                {
+                  text: `Analyze the following list of customer complaints and provide a batch summary.
+                  Return the result strictly in this JSON format:
+                  {
+                    "executive_summary": "A 2-3 sentence high-level overview of the overall sentiment and major problems.",
+                    "recurring_issues": [
+                      { "issue": "Brief name of the issue", "count": 5, "severity": "High/Medium/Low" }
+                    ],
+                    "critical_cases": [
+                      { "user_name": "Name of user", "issue": "Brief description of their critical issue", "recommendation": "Suggested action" }
+                    ]
+                  }
+                  
+                  Complaints data:
+                  ${complaintsText}`
+                }
+              ]
+            }
+          ]
+        })
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const resultText = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    
+    const jsonMatch = resultText.match(/```json\n([\s\S]*?)\n```/) || [null, resultText];
+    let parsedResult;
+    try {
+      parsedResult = JSON.parse(jsonMatch[1] || resultText);
+    } catch (e) {
+      console.error('Failed to parse batch JSON', e);
+      throw e;
+    }
+
+    return parsedResult;
+  } catch (error) {
+    console.error('Error calling Gemini API for batch analysis:', error);
+    throw error;
+  }
+}

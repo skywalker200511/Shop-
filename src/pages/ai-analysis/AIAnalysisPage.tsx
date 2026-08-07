@@ -10,15 +10,17 @@ import { GlassCard } from '@/components/shared/GlassCard';
 import { AiBadge } from '@/components/shared/AiBadge';
 import { PriorityBadge } from '@/components/shared/PriorityBadge';
 import { LoadingSkeleton } from '@/components/shared/LoadingSkeleton';
-import { analyzeComplaint } from '@/lib/gemini';
+import { analyzeComplaint, analyzeAllComplaints } from '@/lib/gemini';
 import { supabaseService } from '@/services/supabaseService';
 import type { AIAnalysis, Complaint } from '@/types';
 import { cn } from '@/lib/utils';
 
 export default function AIAnalysisPage() {
+  const [mode, setMode] = useState<'single' | 'batch'>('single');
   const [inputText, setInputText] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [results, setResults] = useState<Partial<AIAnalysis> | null>(null);
+  const [batchResults, setBatchResults] = useState<any>(null);
   const [complaints, setComplaints] = useState<Complaint[]>([]);
   const [selectedComplaintId, setSelectedComplaintId] = useState('');
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
@@ -27,6 +29,21 @@ export default function AIAnalysisPage() {
     supabaseService.getAllComplaints().then(setComplaints);
   }, []);
   
+  const handleBatchAnalyze = async () => {
+    setIsAnalyzing(true);
+    setBatchResults(null);
+    try {
+      const summary = await analyzeAllComplaints(complaints);
+      setBatchResults(summary);
+      toast.success('Batch analysis complete');
+    } catch (error) {
+      toast.error('Failed to generate batch summary');
+      console.error(error);
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
+
   const handleAnalyze = async () => {
     if (!inputText.trim()) return;
     
@@ -98,81 +115,124 @@ export default function AIAnalysisPage() {
         
         {/* Input Section */}
         <div className="w-full lg:w-1/2 space-y-6">
-          <h2 className="text-2xl font-bold text-white mb-4 font-inter">New Analysis</h2>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-2xl font-bold text-white font-inter">AI Analysis</h2>
+            <div className="flex bg-[#121212] border border-[#2a2a2a] rounded-lg p-1">
+              <button 
+                onClick={() => setMode('single')}
+                className={cn('px-3 py-1.5 text-xs font-medium rounded-md transition-colors', mode === 'single' ? 'bg-[#E11D48] text-white' : 'text-gray-400 hover:text-white')}
+              >Single</button>
+              <button 
+                onClick={() => setMode('batch')}
+                className={cn('px-3 py-1.5 text-xs font-medium rounded-md transition-colors', mode === 'batch' ? 'bg-[#E11D48] text-white' : 'text-gray-400 hover:text-white')}
+              >Batch Summary</button>
+            </div>
+          </div>
           
           <GlassCard className="p-6 flex flex-col gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-400 mb-2 font-jetbrains">Input Text</label>
-              <textarea
-                value={inputText}
-                onChange={(e) => setInputText(e.target.value)}
-                placeholder="Paste complaint text or describe the issue..."
-                className="w-full bg-[#121212] border border-[#2a2a2a] rounded-[10px] p-4 text-white focus:border-[#E11D48] focus:ring-1 focus:ring-[#E11D48] outline-none transition-all resize-none min-h-[150px] font-inter"
-                rows={6}
-              />
-            </div>
+            {mode === 'single' ? (
+              <>
+                <div>
+                  <label className="block text-sm font-medium text-gray-400 mb-2 font-jetbrains">Input Text</label>
+                  <textarea
+                    value={inputText}
+                    onChange={(e) => setInputText(e.target.value)}
+                    placeholder="Paste complaint text or describe the issue..."
+                    className="w-full bg-[#121212] border border-[#2a2a2a] rounded-[10px] p-4 text-white focus:border-[#E11D48] focus:ring-1 focus:ring-[#E11D48] outline-none transition-all resize-none min-h-[150px] font-inter"
+                    rows={6}
+                  />
+                </div>
 
-            <div className="border-2 border-dashed border-[#2a2a2a] rounded-[10px] p-8 flex flex-col items-center justify-center bg-[#121212] hover:bg-[#1a1a1a] transition-colors relative">
-              <input 
-                type="file" 
-                multiple 
-                onChange={handleFileUpload} 
-                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                accept=".pdf,.doc,.docx,.jpg,.png,.txt"
-              />
-              <Upload className="w-8 h-8 text-gray-400 mb-2" />
-              <p className="text-gray-400 text-sm font-inter text-center">Drop files here or click to upload</p>
-              <p className="text-gray-500 text-xs mt-1">Accepts .pdf, .doc, .jpg, .png, .txt</p>
-            </div>
-            
-            {uploadedFiles.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {uploadedFiles.map((file, i) => (
-                  <div key={i} className="flex items-center gap-2 bg-[#2a2a2a] px-3 py-1.5 rounded-full text-xs text-gray-300">
-                    <span className="truncate max-w-[120px]">{file.name}</span>
-                    <button onClick={() => removeFile(i)} className="text-gray-500 hover:text-white">&times;</button>
+                <div className="border-2 border-dashed border-[#2a2a2a] rounded-[10px] p-8 flex flex-col items-center justify-center bg-[#121212] hover:bg-[#1a1a1a] transition-colors relative">
+                  <input 
+                    type="file" 
+                    multiple 
+                    onChange={handleFileUpload} 
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    accept=".pdf,.doc,.docx,.jpg,.png,.txt"
+                  />
+                  <Upload className="w-8 h-8 text-gray-400 mb-2" />
+                  <p className="text-gray-400 text-sm font-inter text-center">Drop files here or click to upload</p>
+                  <p className="text-gray-500 text-xs mt-1">Accepts .pdf, .doc, .jpg, .png, .txt</p>
+                </div>
+                
+                {uploadedFiles.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {uploadedFiles.map((file, i) => (
+                      <div key={i} className="flex items-center gap-2 bg-[#2a2a2a] px-3 py-1.5 rounded-full text-xs text-gray-300">
+                        <span className="truncate max-w-[120px]">{file.name}</span>
+                        <button onClick={() => removeFile(i)} className="text-gray-500 hover:text-white">&times;</button>
+                      </div>
+                    ))}
                   </div>
-                ))}
+                )}
+
+                <div className="flex items-center gap-4 py-2">
+                  <div className="h-px bg-[#2a2a2a] flex-1"></div>
+                  <span className="text-gray-500 text-sm font-jetbrains">OR</span>
+                  <div className="h-px bg-[#2a2a2a] flex-1"></div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-400 mb-2 font-jetbrains">Select existing complaint</label>
+                  <select
+                    value={selectedComplaintId}
+                    onChange={handleComplaintSelect}
+                    className="w-full bg-[#121212] border border-[#2a2a2a] rounded-[10px] p-3 text-white focus:border-[#E11D48] focus:ring-1 focus:ring-[#E11D48] outline-none appearance-none"
+                  >
+                    <option value="">-- Select a complaint --</option>
+                    {complaints.map(c => (
+                      <option key={c.id} value={c.id}>{c.complaint_number} - {c.title}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <button
+                  onClick={handleAnalyze}
+                  disabled={!inputText.trim() || isAnalyzing}
+                  className="mt-4 w-full bg-[#1e3a8a] hover:bg-[#1e40af] disabled:opacity-50 disabled:hover:bg-[#1e3a8a] text-white font-medium py-4 px-6 rounded-[10px] flex items-center justify-center gap-2 transition-all shadow-[0_0_15px_rgba(59,130,246,0.3)] hover:shadow-[0_0_25px_rgba(59,130,246,0.5)] group"
+                >
+                  {isAnalyzing ? (
+                    <>
+                      <RefreshCcw className="w-5 h-5 animate-spin" />
+                      <span className="animate-pulse">Analyzing with Gemini AI...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-5 h-5 group-hover:animate-pulse text-[#74D8BD]" />
+                      Analyze Single Complaint
+                    </>
+                  )}
+                </button>
+              </>
+            ) : (
+              <div className="flex flex-col items-center justify-center py-12 px-4 text-center space-y-6">
+                <div className="w-20 h-20 bg-gradient-to-br from-[#1e3a8a] to-[#E11D48] rounded-full flex items-center justify-center shadow-lg shadow-[#E11D48]/20">
+                  <Sparkles className="w-10 h-10 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-white mb-2">Batch AI Summarization</h3>
+                  <p className="text-gray-400 text-sm max-w-md">Generate a comprehensive executive summary of all {complaints.length} currently active complaints. Discover trending issues and critical cases instantly.</p>
+                </div>
+                <button
+                  onClick={handleBatchAnalyze}
+                  disabled={isAnalyzing}
+                  className="mt-4 w-full bg-[#E11D48] hover:bg-[#E11D48]/90 disabled:opacity-50 disabled:hover:bg-[#E11D48] text-white font-medium py-4 px-6 rounded-[10px] flex items-center justify-center gap-2 transition-all shadow-[0_0_15px_rgba(225,29,72,0.3)] hover:shadow-[0_0_25px_rgba(225,29,72,0.5)] group"
+                >
+                  {isAnalyzing ? (
+                    <>
+                      <RefreshCcw className="w-5 h-5 animate-spin" />
+                      <span className="animate-pulse">Generating Batch Summary...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-5 h-5 group-hover:animate-pulse text-white" />
+                      Generate Executive Summary
+                    </>
+                  )}
+                </button>
               </div>
             )}
-
-            <div className="flex items-center gap-4 py-2">
-              <div className="h-px bg-[#2a2a2a] flex-1"></div>
-              <span className="text-gray-500 text-sm font-jetbrains">OR</span>
-              <div className="h-px bg-[#2a2a2a] flex-1"></div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-400 mb-2 font-jetbrains">Select existing complaint</label>
-              <select
-                value={selectedComplaintId}
-                onChange={handleComplaintSelect}
-                className="w-full bg-[#121212] border border-[#2a2a2a] rounded-[10px] p-3 text-white focus:border-[#E11D48] focus:ring-1 focus:ring-[#E11D48] outline-none appearance-none"
-              >
-                <option value="">-- Select a complaint --</option>
-                {complaints.map(c => (
-                  <option key={c.id} value={c.id}>{c.complaint_number} - {c.title}</option>
-                ))}
-              </select>
-            </div>
-
-            <button
-              onClick={handleAnalyze}
-              disabled={!inputText.trim() || isAnalyzing}
-              className="mt-4 w-full bg-[#1e3a8a] hover:bg-[#1e40af] disabled:opacity-50 disabled:hover:bg-[#1e3a8a] text-white font-medium py-4 px-6 rounded-[10px] flex items-center justify-center gap-2 transition-all shadow-[0_0_15px_rgba(59,130,246,0.3)] hover:shadow-[0_0_25px_rgba(59,130,246,0.5)] group"
-            >
-              {isAnalyzing ? (
-                <>
-                  <RefreshCcw className="w-5 h-5 animate-spin" />
-                  <span className="animate-pulse">Analyzing with Gemini AI...</span>
-                </>
-              ) : (
-                <>
-                  <Sparkles className="w-5 h-5 group-hover:animate-pulse text-[#74D8BD]" />
-                  Analyze with Gemini
-                </>
-              )}
-            </button>
           </GlassCard>
         </div>
 
@@ -197,7 +257,71 @@ export default function AIAnalysisPage() {
               </motion.div>
             )}
 
-            {!isAnalyzing && results && (
+            {!isAnalyzing && mode === 'batch' && batchResults && (
+              <motion.div
+                key="batch-results"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="space-y-6"
+              >
+                <div className="flex justify-between items-center">
+                  <h2 className="text-2xl font-bold text-white font-inter">Executive Summary</h2>
+                  <div className="flex gap-2">
+                    <button onClick={handleClear} className="p-2 text-gray-400 hover:text-white transition-colors bg-[#121212] rounded-lg border border-[#2a2a2a]">
+                      <RefreshCcw size={18} />
+                    </button>
+                    <button onClick={handleSave} className="flex items-center gap-2 bg-[#E11D48] hover:bg-[#E11D48]/90 text-white px-3 py-2 rounded-lg transition-colors text-sm">
+                      <Save size={16} /> Save Report
+                    </button>
+                  </div>
+                </div>
+
+                <GlassCard className="p-6 border-l-4 border-l-[#E11D48]">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Sparkles className="w-5 h-5 text-[#E11D48]" />
+                    <h3 className="text-lg font-bold text-white">Overview</h3>
+                  </div>
+                  <p className="text-gray-300 leading-relaxed text-sm">{batchResults.executive_summary}</p>
+                </GlassCard>
+
+                <h3 className="text-lg font-bold text-white mt-6 mb-4">Top Recurring Issues</h3>
+                <div className="grid grid-cols-1 gap-4">
+                  {batchResults.recurring_issues?.map((issue: any, idx: number) => (
+                    <GlassCard key={idx} className="p-4 flex justify-between items-center">
+                      <div className="flex items-center gap-3">
+                        <div className={cn("w-2 h-2 rounded-full", issue.severity === 'High' ? 'bg-red-500' : issue.severity === 'Medium' ? 'bg-orange-500' : 'bg-yellow-500')} />
+                        <span className="text-white font-medium">{issue.issue}</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <span className="text-xs font-mono text-gray-400 bg-[#121212] px-2 py-1 rounded border border-[#2a2a2a]">{issue.count} occurrences</span>
+                      </div>
+                    </GlassCard>
+                  ))}
+                </div>
+
+                <h3 className="text-lg font-bold text-white mt-6 mb-4">Critical Cases Requiring Action</h3>
+                <div className="space-y-4">
+                  {batchResults.critical_cases?.map((caseItem: any, idx: number) => (
+                    <GlassCard key={idx} className="p-5 border border-red-500/30 bg-red-500/5">
+                      <div className="flex items-start justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          <User size={16} className="text-red-400" />
+                          <span className="font-bold text-white">{caseItem.user_name}</span>
+                        </div>
+                        <AiBadge />
+                      </div>
+                      <p className="text-sm text-gray-300 mb-3">{caseItem.issue}</p>
+                      <div className="bg-[#121212] p-3 rounded-lg border border-[#2a2a2a]">
+                        <span className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1 block">Recommended Action</span>
+                        <p className="text-sm text-[#74D8BD]">{caseItem.recommendation}</p>
+                      </div>
+                    </GlassCard>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+
+            {!isAnalyzing && mode === 'single' && results && (
               <motion.div
                 key="results"
                 initial={{ opacity: 0, x: 20 }}
