@@ -43,32 +43,28 @@ export default function SubmitComplaintPage() {
     }
   });
 
-  const description = watch('description');
-
-  useEffect(() => {
-    const analyzeText = async () => {
-      if (description && description.length > 50) {
-        setIsAnalyzing(true);
-        try {
-          const results = await analyzeComplaint(description);
-          setAiSuggestions({
-            category: results.predicted_category,
-            priority: results.predicted_priority,
-            duplicates: results.duplicate_ids?.length || 0
-          });
-        } catch (error) {
-          console.error(error);
-        } finally {
-          setIsAnalyzing(false);
-        }
-      } else {
-        setAiSuggestions(null);
-      }
-    };
-
-    const timeoutId = setTimeout(analyzeText, 5000);
-    return () => clearTimeout(timeoutId);
-  }, [description]);
+  const handleAnalyze = async () => {
+    const desc = watch('description');
+    if (!desc || desc.length < 20) {
+      toast.error('Please write a longer description before analyzing.');
+      return;
+    }
+    setIsAnalyzing(true);
+    setAiSuggestions(null);
+    try {
+      const results = await analyzeComplaint(desc);
+      setAiSuggestions({
+        category: results.predicted_category,
+        priority: results.predicted_priority,
+        duplicates: results.duplicate_ids?.length || 0
+      });
+    } catch (error: any) {
+      console.error(error);
+      toast.error(error.message || 'Failed to get AI suggestions');
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -198,6 +194,24 @@ export default function SubmitComplaintPage() {
               placeholder="Please provide as much detail as possible..."
             />
             {errors.description && <p className="text-[#E11D48] text-xs mt-1">{errors.description.message}</p>}
+            <button
+              type="button"
+              onClick={handleAnalyze}
+              disabled={isAnalyzing}
+              className="mt-3 inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#3B82F6] to-[#6366f1] hover:from-[#2563EB] hover:to-[#4f46e5] text-white text-sm font-medium rounded-[10px] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isAnalyzing ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  Analyzing...
+                </>
+              ) : (
+                <>
+                  <Sparkles className="w-4 h-4" />
+                  Analyze with AI
+                </>
+              )}
+            </button>
           </div>
 
           {/* AI Suggestions Box */}
