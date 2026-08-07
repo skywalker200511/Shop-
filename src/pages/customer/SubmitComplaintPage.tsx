@@ -110,7 +110,7 @@ export default function SubmitComplaintPage() {
         description: data.description,
         category: data.category,
         customer_id: profile.id, // Use actual customer record ID, not auth user ID
-        priority: 'medium',
+        priority: data.priority || 'medium',
         status: 'open',
       });
 
