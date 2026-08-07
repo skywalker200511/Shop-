@@ -38,7 +38,7 @@ export function Sidebar() {
       {/* Sidebar */}
       <aside
         className={cn(
-          'fixed left-0 top-0 h-screen bg-white border-r border-[#e0e0da] z-50 flex flex-col transition-all duration-300 ease-in-out shadow-sm',
+          'fixed left-4 top-4 h-[calc(100vh-2rem)] bg-[#090909] text-white rounded-[24px] border border-[#2a2a2a] z-50 flex flex-col transition-all duration-300 ease-in-out shadow-2xl',
           'hidden md:flex',
           isCollapsed ? 'w-[72px]' : 'w-[260px]',
         )}
@@ -46,12 +46,12 @@ export function Sidebar() {
         <SidebarContent isCollapsed={isCollapsed} />
         <button
           onClick={toggleCollapse}
-          className="absolute -right-3 top-20 w-6 h-6 rounded-full bg-white border border-[#e0e0da] flex items-center justify-center hover:border-[#e11d48] hover:shadow-md transition-all shadow-sm"
+          className="absolute -right-3 top-20 w-6 h-6 rounded-full bg-[#171717] border border-[#2a2a2a] flex items-center justify-center hover:border-[#e11d48] hover:shadow-md transition-all shadow-sm"
         >
           {isCollapsed ? (
-            <ChevronRight className="w-3 h-3 text-[#555550]" />
+            <ChevronRight className="w-3 h-3 text-[#a0a09a]" />
           ) : (
-            <ChevronLeft className="w-3 h-3 text-[#555550]" />
+            <ChevronLeft className="w-3 h-3 text-[#a0a09a]" />
           )}
         </button>
       </aside>
@@ -59,7 +59,7 @@ export function Sidebar() {
       {/* Mobile Sidebar */}
       <aside
         className={cn(
-          'fixed left-0 top-0 h-screen w-[280px] bg-white border-r border-[#e0e0da] z-50 flex flex-col transition-transform duration-300 ease-in-out md:hidden shadow-xl',
+          'fixed left-2 top-2 h-[calc(100vh-1rem)] w-[280px] bg-[#090909] text-white rounded-[24px] border border-[#2a2a2a] z-50 flex flex-col transition-transform duration-300 ease-in-out md:hidden shadow-2xl',
           isMobileOpen ? 'translate-x-0' : '-translate-x-full',
         )}
       >
@@ -91,12 +91,12 @@ function SidebarContent({
       {/* Logo */}
       <div
         className={cn(
-          'flex items-center border-b border-[#e0e0da] h-16 flex-shrink-0',
+          'flex items-center border-b border-[#2a2a2a] h-16 flex-shrink-0',
           isCollapsed ? 'justify-center px-3' : 'px-2',
         )}
       >
         {isCollapsed ? (
-          <span className="text-2xl font-black text-[#1e3a8a]">S+</span>
+          <span className="text-2xl font-black text-white">S+</span>
         ) : (
           <img
             src="/logo.png"
@@ -122,8 +122,8 @@ function SidebarContent({
                 'relative flex items-center gap-3 rounded-xl transition-all duration-200 group',
                 isCollapsed ? 'justify-center px-3 py-3' : 'px-4 py-3',
                 isActive
-                  ? 'bg-[#fff0f3] text-[#0a0a0a] border border-[#fecdd3]'
-                  : 'text-[#555550] hover:bg-[#f5f5f0] hover:text-[#0a0a0a] border border-transparent',
+                  ? 'bg-[#1f1f1f] text-white border border-[#2a2a2a]'
+                  : 'text-[#a0a09a] hover:bg-[#121212] hover:text-white border border-transparent',
               )}
             >
               {isActive && (
@@ -137,7 +137,7 @@ function SidebarContent({
               <item.icon
                 className={cn(
                   'flex-shrink-0 transition-colors',
-                  isActive ? 'text-[#e11d48]' : 'text-[#737370] group-hover:text-[#0a0a0a]',
+                  isActive ? 'text-[#e11d48]' : 'text-[#a0a09a] group-hover:text-white',
                   'w-5 h-5',
                 )}
               />
@@ -154,7 +154,7 @@ function SidebarContent({
 
       {/* Bottom label */}
       {!isCollapsed && (
-        <div className="px-5 py-4 border-t border-[#e0e0da]">
+        <div className="px-5 py-4 border-t border-[#2a2a2a]">
           <p className="text-[10px] font-mono text-[#a0a09a] tracking-widest uppercase">v1.0 · Enterprise</p>
         </div>
       )}
