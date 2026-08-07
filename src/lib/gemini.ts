@@ -3,6 +3,7 @@ import { ComplaintCategory, ComplaintPriority, SentimentType } from '@/types';
 import { generateId } from './utils';
 
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+const GEMINI_MODEL = 'gemini-3.5-flash-lite';
 
 export async function analyzeComplaint(text: string): Promise<Partial<AIAnalysis>> {
   if (!GEMINI_API_KEY) {
@@ -12,7 +13,7 @@ export async function analyzeComplaint(text: string): Promise<Partial<AIAnalysis
 
   try {
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`,
       {
         method: 'POST',
         headers: {
@@ -42,10 +43,7 @@ export async function analyzeComplaint(text: string): Promise<Partial<AIAnalysis
                 }
               ]
             }
-          ],
-          generationConfig: {
-            thinkingConfig: { thinkingBudget: 0 }
-          }
+          ]
         })
       }
     );
@@ -83,7 +81,7 @@ export async function analyzeComplaint(text: string): Promise<Partial<AIAnalysis
       root_cause: parsedResult.root_cause || 'Unknown',
       risk_score: parsedResult.risk_score || 50,
       confidence: parsedResult.confidence || 0.8,
-      model: 'gemini-3.6-flash',
+      model: GEMINI_MODEL,
       processing_time_ms: Math.floor(Math.random() * 500) + 1000,
       created_at: new Date().toISOString(),
     };
@@ -133,7 +131,7 @@ export async function analyzeAllComplaints(complaints: any[]): Promise<any> {
 
   try {
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`,
       {
         method: 'POST',
         headers: {
@@ -161,10 +159,7 @@ export async function analyzeAllComplaints(complaints: any[]): Promise<any> {
                 }
               ]
             }
-          ],
-          generationConfig: {
-            thinkingConfig: { thinkingBudget: 0 }
-          }
+          ]
         })
       }
     );
