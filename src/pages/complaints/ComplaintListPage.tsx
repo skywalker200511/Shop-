@@ -233,17 +233,29 @@ export default function ComplaintListPage() {
     },
     {
       accessorKey: 'priority',
-      header: 'Priority',
+      header: ({ column }: any) => (
+        <div className="flex items-center cursor-pointer hover:text-white" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+          Priority <ArrowUpDown className="ml-2 h-4 w-4" />
+        </div>
+      ),
       cell: (info: any) => <PriorityBadge priority={info.getValue()} />
     },
     {
       accessorKey: 'status',
-      header: 'Status',
+      header: ({ column }: any) => (
+        <div className="flex items-center cursor-pointer hover:text-white" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+          Status <ArrowUpDown className="ml-2 h-4 w-4" />
+        </div>
+      ),
       cell: (info: any) => <StatusBadge status={info.getValue()} />
     },
     {
       accessorKey: 'category',
-      header: 'Category',
+      header: ({ column }: any) => (
+        <div className="flex items-center cursor-pointer hover:text-white" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+          Category <ArrowUpDown className="ml-2 h-4 w-4" />
+        </div>
+      ),
       cell: (info: any) => {
         const row = info.row.original;
         return <span className="text-gray-300 capitalize">{row.category.replace('_', ' ')}</span>
