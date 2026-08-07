@@ -13,7 +13,7 @@ export function StaffLayout() {
       <div
         className={cn(
           'flex flex-col min-h-screen transition-all duration-300 w-full',
-          isCollapsed ? 'md:ml-[104px] md:w-[calc(100%-104px)]' : 'md:ml-[292px] md:w-[calc(100%-292px)]',
+          isCollapsed ? 'md:ml-[72px] md:w-[calc(100%-72px)]' : 'md:ml-[260px] md:w-[calc(100%-260px)]',
         )}
       >
         <TopNav />
