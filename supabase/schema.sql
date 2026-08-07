@@ -14,7 +14,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE TYPE user_role AS ENUM ('admin', 'manager', 'support', 'customer');
 CREATE TYPE complaint_status AS ENUM ('open', 'assigned', 'in_progress', 'resolved', 'closed', 'reopened');
 CREATE TYPE complaint_priority AS ENUM ('critical', 'high', 'medium', 'low');
-CREATE TYPE complaint_category AS ENUM ('billing', 'technical', 'service', 'account', 'security', 'other');
+CREATE TYPE complaint_category AS ENUM ('delivery', 'refund', 'product_related', 'service', 'account', 'other');
 CREATE TYPE notification_type AS ENUM ('complaint_update', 'assignment', 'sla_alert', 'ai_alert', 'system');
 CREATE TYPE sentiment_type AS ENUM ('very_negative', 'negative', 'neutral', 'positive', 'very_positive');
 
