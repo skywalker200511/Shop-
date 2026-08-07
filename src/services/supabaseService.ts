@@ -222,6 +222,34 @@ export const supabaseService = {
     ];
   },
   
+  async getMonthlyVolumeData() {
+    const { data, error } = await supabase
+      .from('complaints')
+      .select('created_at')
+      .gte('created_at', new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString());
+      
+    if (error) throw error;
+    
+    // Group by month
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const counts = new Array(12).fill(0);
+    
+    data?.forEach(complaint => {
+      const date = new Date(complaint.created_at);
+      counts[date.getMonth()]++;
+    });
+    
+    // Return last 6 months
+    const currentMonth = new Date().getMonth();
+    const result = [];
+    for (let i = 5; i >= 0; i--) {
+      let m = currentMonth - i;
+      if (m < 0) m += 12;
+      result.push({ name: monthNames[m], value: counts[m] });
+    }
+    return result;
+  },
+  
   async analyzeComplaintAI(text: string) {
     return null; // Implemented in actual component or edge function
   },

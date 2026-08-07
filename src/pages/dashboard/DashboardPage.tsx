@@ -73,13 +73,14 @@ export const DashboardPage = () => {
   const [loading, setLoading] = useState(true);
   const [metrics, setMetrics] = useState({ total_complaints: 0, sla_breaches: 0, ai_accuracy: 0, avg_resolution_hours: 0 });
   const [volumeData, setVolumeData] = useState<any[]>([]);
+  const [chartPeriod, setChartPeriod] = useState<'weekly' | 'monthly'>('weekly');
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const [metricsData, chart] = await Promise.all([
           supabaseService.getAdminDashboardMetrics(),
-          supabaseService.getWeeklyVolumeData()
+          chartPeriod === 'weekly' ? supabaseService.getWeeklyVolumeData() : supabaseService.getMonthlyVolumeData()
         ]);
         setMetrics(metricsData);
         setVolumeData(chart);
@@ -90,7 +91,7 @@ export const DashboardPage = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [chartPeriod]);
 
   if (loading) {
     return (
@@ -193,7 +194,7 @@ export const DashboardPage = () => {
         </motion.div>
       </motion.div>
 
-      {/* Weekly Volume Chart */}
+      {/* Volume Chart */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -202,13 +203,23 @@ export const DashboardPage = () => {
         <GlassCard className="p-6">
           <div className="flex justify-between items-center mb-6">
             <div>
-              <h2 className="text-[#0a0a0a] font-bold text-lg">Weekly Volume</h2>
-              <p className="text-xs text-[#737370] mt-0.5 font-mono">Complaint trends over the last 7 days</p>
+              <h2 className="text-[#0a0a0a] font-bold text-lg">{chartPeriod === 'weekly' ? 'Weekly' : 'Monthly'} Volume</h2>
+              <p className="text-xs text-[#737370] mt-0.5 font-mono">Complaint trends over the last {chartPeriod === 'weekly' ? '7 days' : '6 months'}</p>
             </div>
             <div className="flex items-center gap-3">
               <div className="flex bg-[#f5f5f0] rounded-xl p-1 border border-[#e0e0da]">
-                <button className="px-3 py-1.5 text-xs font-mono font-semibold text-[#0a0a0a] bg-[#e11d48] rounded-lg shadow-sm">Weekly</button>
-                <button className="px-3 py-1.5 text-xs font-mono text-[#737370] hover:text-[#0a0a0a] transition-colors">Monthly</button>
+                <button 
+                  onClick={() => setChartPeriod('weekly')}
+                  className={cn("px-3 py-1.5 text-xs font-mono transition-colors rounded-lg", chartPeriod === 'weekly' ? "font-semibold text-[#0a0a0a] bg-[#e11d48] shadow-sm text-white" : "text-[#737370] hover:text-[#0a0a0a]")}
+                >
+                  Weekly
+                </button>
+                <button 
+                  onClick={() => setChartPeriod('monthly')}
+                  className={cn("px-3 py-1.5 text-xs font-mono transition-colors rounded-lg", chartPeriod === 'monthly' ? "font-semibold text-[#0a0a0a] bg-[#e11d48] shadow-sm text-white" : "text-[#737370] hover:text-[#0a0a0a]")}
+                >
+                  Monthly
+                </button>
               </div>
               <button className="text-[#737370] hover:text-[#0a0a0a] transition-colors">
                 <MoreHorizontal size={20} />
@@ -269,11 +280,11 @@ export const DashboardPage = () => {
                 <div className="p-1.5 bg-red-50 rounded-lg border border-red-100">
                   <AlertTriangle size={15} className="text-[#e11d48]" />
                 </div>
-                <h4 className="text-sm text-[#0a0a0a] font-semibold">Enterprise Account Outage</h4>
+                <h4 className="text-sm text-[#0a0a0a] font-semibold">Unusual Complaint Spike</h4>
               </div>
               <span className="text-[10px] font-mono font-bold px-2 py-0.5 bg-[#e11d48] text-[#0a0a0a] rounded-full uppercase">Urgent</span>
             </div>
-            <p className="text-xs text-[#737370]">Critical service disruption affecting enterprise tier</p>
+            <p className="text-xs text-[#737370]">Sudden 40% increase in complaints over the last hour.</p>
             <div className="flex items-center gap-1.5 mt-auto pt-2 border-t border-[#f0f0eb]">
               <Frown size={13} className="text-[#e11d48]" />
               <span className="text-xs text-[#737370] font-mono">AI Sentiment: Very Angry</span>
@@ -286,11 +297,11 @@ export const DashboardPage = () => {
                 <div className="p-1.5 bg-orange-50 rounded-lg border border-orange-100">
                   <AlertTriangle size={15} className="text-[#f97316]" />
                 </div>
-                <h4 className="text-sm text-[#0a0a0a] font-semibold">API Rate Limit Exceeded</h4>
+                <h4 className="text-sm text-[#0a0a0a] font-semibold">High SLA Breach Risk</h4>
               </div>
               <span className="text-[10px] font-mono font-bold px-2 py-0.5 bg-[#f97316] text-[#0a0a0a] rounded-full uppercase">High</span>
             </div>
-            <p className="text-xs text-[#737370]">Multiple endpoints returning 429 errors for users</p>
+            <p className="text-xs text-[#737370]">15 complaints are within 1 hour of breaching SLA.</p>
             <div className="flex items-center gap-1.5 mt-auto pt-2 border-t border-[#f0f0eb]">
               <Frown size={13} className="text-orange-400" />
               <span className="text-xs text-[#737370] font-mono">AI Sentiment: Frustrated</span>
