@@ -3,8 +3,8 @@ import type { User, Customer, Department, Employee, Complaint, AIAnalysis, Dashb
 import { generateId } from '@/lib/utils';
 
 export const mockUsers: User[] = [
-  { id: 'u1', email: 'admin@nexus.ai', full_name: 'Admin User', role: UserRole.Admin, is_active: true, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
-  { id: 'u2', email: 'support@nexus.ai', full_name: 'Support Agent', role: UserRole.Support, is_active: true, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: 'u1', email: 'admin@shopplus.com', full_name: 'Admin User', role: UserRole.Admin, is_active: true, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: 'u2', email: 'support@shopplus.com', full_name: 'Support Agent', role: UserRole.Support, is_active: true, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
   { id: 'u3', email: 'john@customer.co', full_name: 'John Doe', role: UserRole.Customer, is_active: true, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
 ];
 

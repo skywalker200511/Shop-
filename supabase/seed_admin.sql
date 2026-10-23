@@ -91,7 +91,7 @@ BEGIN
   VALUES (
     new_user_id,
     'admin@nexus.ai',
-    'Nexus Administrator',
+    'Shop+ Administrator',
     'admin',
     true
   )

@@ -1,5 +1,5 @@
 -- ============================================================
--- NEXUS AI CRM — Supabase Database Schema
+-- SHOP+ AI CRM — Supabase Database Schema
 -- ============================================================
 -- Run this in Supabase SQL Editor: Dashboard → SQL Editor → New Query → Paste → Run
 -- ============================================================

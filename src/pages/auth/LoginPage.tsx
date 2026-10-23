@@ -60,9 +60,12 @@ export default function LoginPage() {
         transition={{ duration: 0.5 }}
         className="w-full max-w-md"
       >
-        <div className="text-center mb-10">
-          <h1 className="text-4xl font-bold tracking-tight mb-2">NEXUS AI</h1>
-          <p className="text-[#a1a1aa] text-lg">Enterprise AI-Powered CRM</p>
+        <div className="text-center mb-8 flex flex-col items-center">
+          <div className="bg-white px-5 py-2.5 rounded-2xl shadow-lg mb-4 inline-flex items-center justify-center">
+            <img src="/logo.png" alt="Shop+" className="h-10 w-auto object-contain" />
+          </div>
+          <h1 className="text-3xl font-bold tracking-tight mb-1 text-white">Shop+</h1>
+          <p className="text-[#a1a1aa] text-base">AI-Powered CRM</p>
         </div>
 
         <div className="bg-[#171717] border border-[#2a2a2a] rounded-[10px] p-6 sm:p-8 shadow-2xl relative group overflow-hidden transition-all duration-300 hover:border-[#E11D48]/50 hover:shadow-[#E11D48]/10 hover:shadow-xl">
